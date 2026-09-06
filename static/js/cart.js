@@ -158,7 +158,7 @@ const Cart = (() => {
         html +=
           "<div class='cart-item' id='citem-" + item.id + "'>" +
           "<div class='cart-item-top'>" +
-          "<span class='cart-item-emoji'>" + item.emoji + "</span>" +
+          "<img class='cart-item-image' src='" + Menu.imageSrc(item) + "' alt='' loading='lazy' onerror=\"this.style.visibility='hidden'\">" +
           "<span class='cart-item-name'>" + App.escHtml(item.name) + "</span>" +
           "<button class='cart-item-remove' onclick=\"Cart.removeFromCart('" + item.id + "')\"" +
           " title='Remove' aria-label='Remove " + App.escHtml(item.name) + "'>✕</button>" +

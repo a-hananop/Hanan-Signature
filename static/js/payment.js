@@ -36,7 +36,7 @@ const Payment = (() => {
         <div class="co-items-list">
           ${items.map(i => `
             <div class="co-item">
-              <span class="co-item-name">${i.emoji} ${App.escHtml(i.name)} ×${i.qty}
+              <span class="co-item-name"><img class="checkout-item-image" src="${Menu.imageSrc(i)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'"> ${App.escHtml(i.name)} ×${i.qty}
                 ${i.note ? `<em style="font-size:.65rem;opacity:.6;margin-left:4px">(${App.escHtml(i.note)})</em>` : ""}
               </span>
               <span class="co-item-price">$${(i.price * i.qty).toFixed(2)}</span>

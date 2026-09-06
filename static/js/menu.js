@@ -162,7 +162,7 @@ const Menu = (() => {
           " role='button' tabindex='0'" +
           " aria-label='" + App.escHtml(item.name) + ", $" + item.price.toFixed(2) + "'>" +
           "<div class='menu-card-top'>" +
-          "<div class='menu-card-emoji'>" + item.emoji + "</div>" +
+          "<img class='menu-card-image' src='" + imageSrc(item) + "' alt='' loading='lazy' onerror=\"this.style.visibility='hidden'\">" +
           "<div class='menu-card-info'>" +
           "<div class='menu-card-name'>" + App.escHtml(item.name) + cartLabel + "</div>" +
           "<div class='menu-card-price'>$" + item.price.toFixed(2) + "</div>" +
@@ -197,6 +197,30 @@ const Menu = (() => {
   // ── Item modal ────────────────────────────────────────────────────────
   var _modalItemId = null;
 
+  // Add photos by placing files in static/images/dishes/{item-id}.jpg (or by
+  // adding an `image` URL to an item). Missing photos automatically fall back
+  // to the dish emoji, so the menu remains usable while the photo library is
+  // being prepared.
+  function imageSrc(item) {
+    // The uploaded files use the dish name. Keep the one filename whose
+    // apostrophe differs from the menu data as an explicit alias.
+    var filename = item.imageFile || item.name + ".jpg";
+    if (item.id === "sp2") filename = "Royal Nihari — Chef’s Pride.jpg";
+    return item.image || "/static/images/dishes/" + encodeURIComponent(filename);
+  }
+
+  function viewerImageMarkup(item) {
+    return "<div class='dish-viewer' data-angle='0' data-zoom='1' tabindex='0' aria-label='Interactive view of " + App.escHtml(item.name) + "'>" +
+      "<div class='dish-viewer-glow'></div>" +
+      "<div class='dish-viewer-orbit'></div>" +
+      "<div class='dish-viewer-stage' id='dishViewerStage'>" +
+      "<img class='dish-viewer-image' id='dishViewerImage' src='" + imageSrc(item) + "' alt='" + App.escHtml(item.name) + "' onerror=\"this.style.display='none';this.nextElementSibling.style.display='grid'\">" +
+      "<div class='dish-viewer-fallback' aria-hidden='true'>" + item.emoji + "</div>" +
+      "</div>" +
+      "<div class='dish-viewer-caption'><span>Interactive presentation</span><span>Drag to rotate · scroll to zoom</span></div>" +
+      "</div>";
+  }
+
   function openItemModal(id) {
     var item = ALL_ITEMS[id];
     if (!item) return;
@@ -208,7 +232,7 @@ const Menu = (() => {
     if (!overlay || !header || !body) return;
 
     header.innerHTML =
-      "<div class='modal-emoji'>" + item.emoji + "</div>" +
+      viewerImageMarkup(item) +
       "<div class='modal-title-block'>" +
       "<div class='modal-title'>" + App.escHtml(item.name) + "</div>" +
       "<div class='modal-price'>$" + item.price.toFixed(2) + "</div>" +
@@ -251,6 +275,57 @@ const Menu = (() => {
       "</button></div>";
 
     overlay.classList.add("open");
+    initDishViewer();
+  }
+
+  function initDishViewer() {
+    var viewer = document.querySelector("#itemOverlay.open .dish-viewer");
+    var stage = document.getElementById("dishViewerStage");
+    if (!viewer || !stage || viewer.dataset.ready) return;
+    viewer.dataset.ready = "1";
+    var angle = 0;
+    var zoom = 1;
+    var dragging = false;
+    var lastX = 0;
+
+    function paint() {
+      stage.style.setProperty("--dish-rotate", angle + "deg");
+      stage.style.setProperty("--dish-zoom", zoom);
+    }
+    function pointX(event) { return event.touches ? event.touches[0].clientX : event.clientX; }
+    function start(event) {
+      dragging = true;
+      lastX = pointX(event);
+      viewer.classList.add("is-dragging");
+      if (event.cancelable) event.preventDefault();
+    }
+    function move(event) {
+      if (!dragging) return;
+      var x = pointX(event);
+      angle = Math.max(-18, Math.min(18, angle + (x - lastX) * 0.22));
+      lastX = x;
+      paint();
+      if (event.cancelable) event.preventDefault();
+    }
+    function end() { dragging = false; viewer.classList.remove("is-dragging"); }
+    viewer.addEventListener("mousedown", start);
+    window.addEventListener("mousemove", move);
+    window.addEventListener("mouseup", end);
+    viewer.addEventListener("touchstart", start, { passive: false });
+    window.addEventListener("touchmove", move, { passive: false });
+    window.addEventListener("touchend", end);
+    viewer.addEventListener("wheel", function (event) {
+      event.preventDefault();
+      zoom = Math.max(.82, Math.min(1.28, zoom + (event.deltaY < 0 ? .06 : -.06)));
+      paint();
+    }, { passive: false });
+    viewer.addEventListener("keydown", function (event) {
+      if (event.key === "ArrowLeft") angle = Math.max(-18, angle - 3);
+      if (event.key === "ArrowRight") angle = Math.min(18, angle + 3);
+      if (event.key === "Home") { angle = 0; zoom = 1; }
+      paint();
+    });
+    paint();
   }
 
   function changeModalQty(delta) {
@@ -292,6 +367,6 @@ const Menu = (() => {
     App.updateProgress(1);
   }
 
-  return { MENU, ALL_ITEMS, CAT_NAMES, tagClass, tagLabel, renderMenu, openItemModal, changeModalQty, addFromModal };
+  return { MENU, ALL_ITEMS, CAT_NAMES, tagClass, tagLabel, imageSrc, renderMenu, openItemModal, changeModalQty, addFromModal };
 
 })();

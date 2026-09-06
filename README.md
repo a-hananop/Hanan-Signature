@@ -93,3 +93,18 @@ python app.py
 - Smooth spring animations on all interactions
 - Toast notification system
 - Ripple effects on all buttons
+## Dish photos and interactive view
+
+Clicking any menu card opens the centered Dish Studio. It supports mouse/touch drag to tilt the presentation, wheel/touch zoom, keyboard arrow rotation, and the existing order controls.
+
+The repository includes real dish photographs in `static/images/dishes/`. Each photo is matched to its menu item by the dish name, for example:
+
+```text
+static/images/dishes/Chicken Karahi.jpg
+static/images/dishes/Mutton Dum Biryani.jpg
+static/images/dishes/Chicken Tikka.jpg
+```
+
+The menu cards, Dish Studio, cart, and checkout automatically load the matching photo. If a photo is missing, the image area stays unobtrusive instead of breaking the layout. For best results use a sharp square image (at least 1200×1200), overhead or 45-degree angle, consistent warm lighting, and a clean background.
+
+The current browser effect is a lightweight 3D-style presentation around a real photo. For true rotatable 3D, capture or model each dish as a textured `.glb`/`.gltf`: Polycam can export photogrammetry captures as GLTF and other formats, while Blender is useful for cleaning, retopology, materials, lighting, and final rendering. The web viewer should then use Google's `<model-viewer>` component with `camera-controls` and the GLB file.
