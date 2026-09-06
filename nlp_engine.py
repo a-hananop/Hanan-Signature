@@ -33,6 +33,9 @@ INTENTS = {
     "location":    r"(location|address|where.*you|directions|near|find you)",
     "reservation": r"(reserv|booking|book.*table)",
     "price":       r"(price|cost|how much|cheap|expensive|afford|budget)",
+    "calories":    r"(calori|healthy|light|diet|nutrition|low.*calori|kcal)",
+    "ingredients": r"(ingredient|made of|made from|what.*(in|inside)|contain|contains|what is.*made)",
+    "prep":        r"(how long|preparation|prep time|ready|take to cook|takes to cook)",
     "loyalty":     r"(loyalty|points|rewards|member|tier|status|bronze|silver|gold)",
 }
 
@@ -88,6 +91,63 @@ def generate_order_id() -> str:
     return f"HS-{suffix}"
 
 
+def item_detail_response(item: dict, message: str) -> dict:
+    """Answer a question about one identified menu item."""
+    lower = message.lower()
+    asks_ingredients = re.search(INTENTS["ingredients"], lower, re.I)
+    asks_allergens = re.search(r"allergen|allergic|dairy|milk|nut|peanut|gluten|wheat|lactose", lower, re.I)
+    asks_nutrition = re.search(r"calori|healthy|light|diet|nutrition|kcal", lower, re.I)
+    asks_prep = re.search(INTENTS["prep"], lower, re.I)
+    asks_diet = re.search(r"vegetarian|vegan|meatless|no meat|plant.?based|halal", lower, re.I)
+    asks_spice = re.search(r"spicy|hot|mirchi|tez|mild|heat level|hotness", lower, re.I)
+
+    if asks_ingredients:
+        return {
+            "text": (
+                f"**{item['name']}** is prepared as follows:\n\n{item['desc']}\n\n"
+                f"_Allergen information: {', '.join(item['allergens']) if item['allergens'] else 'none declared'}._"
+            ),
+            "replies": [f"How spicy is it?", "How many calories?", f"Add {item['name']}"]
+        }
+    if asks_allergens:
+        return {
+            "text": (
+                f"**{item['name']}** contains or may contain: **"
+                f"{', '.join(item['allergens']) if item['allergens'] else 'no declared allergens'}**. "
+                "Please tell our staff about severe allergies before ordering."
+            ),
+            "replies": ["What is it made of?", f"Add {item['name']}"]
+        }
+    if asks_nutrition:
+        return {
+            "text": f"**{item['name']}** has approximately **{item['calories']} kcal** per serving.",
+            "replies": ["What is it made of?", "Show lighter options", f"Add {item['name']}"]
+        }
+    if asks_prep:
+        return {
+            "text": f"**{item['name']}** takes approximately **{item['prep']} minutes** to prepare. Fresh preparation time may vary slightly during busy service.",
+            "replies": [f"Add {item['name']}", "View menu"]
+        }
+    if asks_diet:
+        dietary = "vegetarian" if "vegetarian" in item["tags"] else "not vegetarian"
+        if "vegan" in item["tags"]:
+            dietary += " and vegan"
+        return {
+            "text": f"**{item['name']}** is {dietary}. It is **100% Halal certified**.",
+            "replies": ["What is it made of?", f"Add {item['name']}"]
+        }
+    if asks_spice:
+        level = "one of our spicier dishes" if "spicy" in item["tags"] else "not marked as spicy"
+        return {
+            "text": f"**{item['name']}** is {level}. We can adjust the heat level on request.",
+            "replies": ["What is it made of?", f"Add {item['name']}"]
+        }
+    return {
+        "text": f"**{item['name']}** — ${item['price']:.2f}\n\n{item['desc']}\n\n⭐ {item['rating']}/5 · ~{item['prep']} min · {item['calories']} kcal",
+        "replies": ["What is it made of?", "How spicy is it?", f"Add {item['name']}"]
+    }
+
+
 def build_response(message: str, cart: dict | None = None) -> dict:
     """
     Build an NLP response dict for the given customer message.
@@ -97,7 +157,7 @@ def build_response(message: str, cart: dict | None = None) -> dict:
     intents    = detect_intents(message)
     found_items = find_menu_items(message)
     is_add     = bool(re.search(
-        r"\b(add|order|want|i'?d like|can i have|give me|bring me|get me|i want|please|ek|do|two|one|three|four)\b",
+        r"\b(add|order|want|i'?d like|i will have|can i have|give me|bring me|get me|i want|please|ek|do|two|one|three|four|\d+)\b",
         message, re.IGNORECASE
     ))
 
@@ -167,6 +227,18 @@ def build_response(message: str, cart: dict | None = None) -> dict:
             "item_id": item["id"],
             "quantity": qty
         }
+
+    # Resolve questions about a specific dish before broad category intents.
+    if found_items and not is_add:
+        asks_item_info = (
+            "price" in intents or "calories" in intents or "ingredients" in intents or
+            "prep" in intents or bool(re.search(
+                r"allergen|allergic|vegetarian|vegan|spicy|mild|what is|tell me about|describe",
+                message, re.I
+            ))
+        )
+        if asks_item_info:
+            return item_detail_response(found_items[0], message)
 
     # ── Category Intents ───────────────────────────────────────────────────
     if "specials" in intents:

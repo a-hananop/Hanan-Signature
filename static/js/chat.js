@@ -30,6 +30,8 @@ const Chat = (() => {
     reservation: /(reserv|booking|book.*table)/i,
     price:       /(price|cost|how much|cheap|expensive|afford|budget)/i,
     calories:    /(calori|healthy|light|diet|nutrition|low.*calori)/i,
+    ingredients: /(ingredient|made of|made from|what.*(in|inside)|contain|contains|what is.*made)/i,
+    prep:        /(how long|preparation|prep time|ready|take to cook|takes to cook)/i,
     loyalty:     /(loyalty|points|rewards|member|tier|status|bronze|silver|gold)/i,
   };
 
@@ -64,6 +66,54 @@ const Chat = (() => {
       if (new RegExp("\\b" + w + "\\b", "i").test(msg)) return words[w];
     }
     return 1;
+  }
+
+  function itemDetails(item, msg) {
+    var lower = msg.toLowerCase();
+    var asksIngredients = INTENTS.ingredients.test(msg);
+    var asksAllergens = /allergen|allergic|dairy|milk|nut|peanut|gluten|wheat|lactose/i.test(msg);
+    var asksNutrition = INTENTS.calories.test(msg);
+    var asksPrep = INTENTS.prep.test(msg);
+    var asksDiet = /vegetarian|vegan|meatless|no meat|plant.?based|halal/i.test(msg);
+    var asksSpice = INTENTS.spicy.test(msg) || /mild|heat level|hotness/i.test(msg);
+    var tags = item.tags.map(function (t) { return t.replace(/-/g, " "); }).join(", ");
+
+    if (asksIngredients) return {
+      text: "**" + item.name + "** is prepared as follows:\n\n" + item.desc +
+        "\n\n_Allergen information: " + (item.allergens.length ? item.allergens.join(", ") : "none declared") + "._",
+      replies: ["How spicy is it?", "How many calories?", "Add " + item.name]
+    };
+    if (asksAllergens) return {
+      text: "**" + item.name + "** contains or may contain: **" +
+        (item.allergens.length ? item.allergens.join(", ") : "no declared allergens") +
+        "**. Please tell our staff about severe allergies before ordering.",
+      replies: ["What is it made of?", "Add " + item.name]
+    };
+    if (asksNutrition) return {
+      text: "**" + item.name + "** has approximately **" + item.calories +
+        " kcal** per serving. It is tagged: " + tags + ".",
+      replies: ["What is it made of?", "Show lighter options", "Add " + item.name]
+    };
+    if (asksPrep) return {
+      text: "**" + item.name + "** takes approximately **" + item.prep +
+        " minutes** to prepare. Fresh preparation time may vary slightly during busy service.",
+      replies: ["Add " + item.name, "View menu"]
+    };
+    if (asksDiet) return {
+      text: "**" + item.name + "** is " + (item.tags.includes("vegetarian") ? "vegetarian" : "not vegetarian") +
+        (item.tags.includes("vegan") ? " and vegan" : "") + ". It is **100% Halal certified**.",
+      replies: ["What is it made of?", "Add " + item.name]
+    };
+    if (asksSpice) return {
+      text: "**" + item.name + "** is " + (item.tags.includes("spicy") ? "one of our spicier dishes" : "not marked as spicy") +
+        ". We can adjust the heat level on request.",
+      replies: ["What is it made of?", "Add " + item.name]
+    };
+    return {
+      text: "**" + item.name + "** — $" + item.price.toFixed(2) + "\n\n" + item.desc +
+        "\n\n⭐ " + item.rating + "/5 · ~" + item.prep + " min · " + item.calories + " kcal",
+      replies: ["What is it made of?", "How spicy is it?", "Add " + item.name]
+    };
   }
 
   // ── NLP Response Engine ───────────────────────────────────────────────
@@ -142,6 +192,16 @@ const Chat = (() => {
         text: "Added **" + item.emoji + " " + item.name + "** × " + qty + " to your order! 🎉" + extra + "\n\n_$" + (item.price * qty).toFixed(2) + "_",
         replies: ["View cart 🛒", "Continue browsing", "Checkout 💳"]
       };
+    }
+
+    // Item-specific questions must be answered before broad category intents.
+    // Example: “How many calories are in Chicken Karahi?” should describe
+    // Chicken Karahi, not show the entire main-course category.
+    if (foundItems.length && !isAdd) {
+      var asksItemInfo = INTENTS.price.test(msg) || INTENTS.calories.test(msg) ||
+        INTENTS.ingredients.test(msg) || INTENTS.prep.test(msg) ||
+        /allergen|allergic|vegetarian|vegan|spicy|mild|what is|tell me about|describe/i.test(msg);
+      if (asksItemInfo) return itemDetails(foundItems[0], msg);
     }
 
     // ── Clear cart intent ──────────────────────────────────────────────
