@@ -3677,6 +3677,167 @@ select {
   }
 }
 
+/* ================================================================
+   CART PANEL — animated order journey
+   ================================================================ */
+.cart-panel {
+  background:
+    radial-gradient(ellipse 80% 35% at 50% 18%, rgba(240, 165, 26, .045), transparent 72%),
+    linear-gradient(180deg, var(--cream-hi), var(--cream)) !important;
+}
+.cart-head {
+  background-size: 220% 220% !important;
+  animation: cartHeaderGlow 13s ease-in-out infinite;
+}
+.cart-head::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .5;
+  background:
+    linear-gradient(125deg, transparent 0 25%, rgba(255, 255, 255, .05) 28%, transparent 34%),
+    radial-gradient(circle at 82% 12%, rgba(240, 165, 26, .14), transparent 32%);
+  background-size: 220% 100%, auto;
+  animation: cartFacetSweep 10s linear infinite;
+}
+.cart-head-top,
+.order-progress { position: relative; z-index: 1; }
+.cart-title {
+  background-size: 220% auto !important;
+  animation: cartTitleShimmer 5s ease-in-out infinite;
+}
+.cart-clear-btn {
+  position: relative;
+  overflow: hidden;
+  transition: all .3s var(--ease-spring) !important;
+}
+.cart-clear-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 34px;
+  left: -42px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .28), transparent);
+  transform: skewX(-18deg);
+  transition: left .55s ease;
+}
+.cart-clear-btn:hover::before { left: calc(100% + 12px); }
+.cart-clear-btn:hover { transform: translateY(-2px) scale(1.05) !important; }
+
+.order-progress::before {
+  background: linear-gradient(90deg, rgba(255, 255, 255, .08), rgba(240, 165, 26, .28), rgba(255, 255, 255, .08)) !important;
+  background-size: 200% 100%;
+  animation: progressTrackGlow 4s linear infinite;
+}
+.prog-fill {
+  animation: progFillAnim 3s linear infinite, progressGlow 2.4s ease-in-out infinite !important;
+}
+.prog-step-item {
+  animation: stepFloat 4s ease-in-out infinite;
+}
+.prog-step-item:nth-child(2) { animation-delay: 0s; }
+.prog-step-item:nth-child(3) { animation-delay: .35s; }
+.prog-step-item:nth-child(4) { animation-delay: .7s; }
+.prog-step-item:nth-child(5) { animation-delay: 1.05s; }
+.prog-step-item.active { animation-duration: 2.2s; }
+.prog-step-item.active .prog-icon-wrap {
+  animation: progPulse 2s ease-in-out infinite, iconRing 2.6s ease-out infinite !important;
+}
+.prog-step-item.done .prog-icon-wrap { animation: doneTick .55s var(--ease-spring) both; }
+.prog-step-item:hover .prog-icon-wrap {
+  transform: translateY(-3px) scale(1.12);
+  border-color: var(--gold-hi);
+}
+
+.cart-items {
+  position: relative;
+  background: radial-gradient(ellipse at 50% 48%, rgba(240, 165, 26, .045), transparent 58%);
+}
+.cart-empty {
+  position: relative;
+  overflow: hidden;
+}
+.cart-empty::before {
+  content: '';
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  top: 50%;
+  left: 50%;
+  border: 1px solid rgba(200, 130, 10, .12);
+  border-radius: 50%;
+  transform: translate(-50%, -55%);
+  box-shadow: 0 0 0 18px rgba(200, 130, 10, .025), 0 0 34px rgba(200, 130, 10, .1);
+  animation: emptyOrbit 8s linear infinite;
+  pointer-events: none;
+}
+.cart-empty-icon {
+  position: relative;
+  z-index: 1;
+  animation: emptyIconFloat 4s ease-in-out infinite !important;
+}
+.cart-empty p,
+.cart-empty small { position: relative; z-index: 1; }
+.cart-item {
+  animation: cartSlideIn .45s var(--ease-spring) both !important;
+}
+
+@keyframes cartHeaderGlow {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+@keyframes cartFacetSweep {
+  from { background-position: -220% 0, 0 0; }
+  to { background-position: 220% 0, 0 0; }
+}
+@keyframes cartTitleShimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+@keyframes progressTrackGlow {
+  from { background-position: 0% 50%; }
+  to { background-position: 200% 50%; }
+}
+@keyframes progressGlow {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.25); }
+}
+@keyframes stepFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+@keyframes iconRing {
+  0%, 100% { box-shadow: 0 0 20px rgba(240, 165, 26, .6), 0 0 0 0 rgba(240, 165, 26, .25); }
+  55% { box-shadow: 0 0 24px rgba(240, 165, 26, .7), 0 0 0 7px rgba(240, 165, 26, 0); }
+}
+@keyframes doneTick {
+  from { transform: scale(.7) rotate(-12deg); opacity: .55; }
+  to { transform: scale(1) rotate(0); opacity: 1; }
+}
+@keyframes emptyOrbit {
+  from { transform: translate(-50%, -55%) rotate(0deg); }
+  to { transform: translate(-50%, -55%) rotate(360deg); }
+}
+@keyframes emptyIconFloat {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-9px) scale(1.06); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cart-head,
+  .cart-head::before,
+  .cart-title,
+  .order-progress::before,
+  .prog-fill,
+  .prog-step-item,
+  .prog-step-item.active .prog-icon-wrap,
+  .prog-step-item.done .prog-icon-wrap,
+  .cart-empty::before,
+  .cart-empty-icon { animation: none !important; }
+}
+
 /* Final palette alignment: warm Hanan Signature crystal glass */
 .chat-zone {
   background:
