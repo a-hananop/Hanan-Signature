@@ -3678,6 +3678,176 @@ select {
 }
 
 /* ================================================================
+   CHECKOUT — animated sections and vector icon system
+   ================================================================ */
+.checkout-modal {
+  border-color: rgba(200, 130, 10, .36) !important;
+  box-shadow: 0 28px 80px rgba(22, 11, 4, .32), 0 0 0 1px rgba(240, 165, 26, .18), 0 0 52px rgba(200, 130, 10, .1) !important;
+}
+.checkout-modal > .modal-header {
+  background: linear-gradient(145deg, #100704, var(--mahogany-pale), var(--mahogany-mid)) !important;
+  background-size: 180% 180% !important;
+  animation: checkoutHeaderGlow 10s ease-in-out infinite;
+}
+.checkout-title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.checkout-modal .co-section {
+  opacity: 0;
+  animation: checkoutSectionIn .55s var(--ease-out) both;
+}
+.checkout-modal > .co-section:nth-of-type(1) { animation-delay: .08s; }
+.checkout-modal > .co-section:nth-of-type(2) { animation-delay: .16s; }
+.checkout-modal > .co-section:nth-of-type(3) { animation-delay: .24s; }
+.checkout-modal > .co-section:nth-of-type(4) { animation-delay: .32s; }
+.checkout-modal > .co-section:nth-of-type(5) { animation-delay: .4s; }
+
+.co-section-title {
+  position: relative;
+  overflow: visible;
+  transition: color .25s ease, letter-spacing .3s var(--ease-spring);
+}
+.co-section-title::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 42px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--gold-hi), transparent);
+  transform-origin: left;
+  animation: sectionLineGrow .8s var(--ease-spring) both;
+}
+.co-section-title:hover { letter-spacing: .14em; }
+.checkout-icon {
+  display: inline-flex;
+  width: 21px;
+  height: 21px;
+  flex: 0 0 21px;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold);
+  vertical-align: middle;
+}
+.checkout-icon svg {
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.65;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 2px 3px rgba(200, 130, 10, .2));
+  animation: checkoutIconFloat 3.2s ease-in-out infinite;
+}
+.co-section-title .checkout-icon { color: var(--gold); }
+.checkout-title .checkout-icon { color: var(--gold-hi); width: 24px; height: 24px; }
+.checkout-title .checkout-icon svg { animation: checkoutSpark 2.4s ease-in-out infinite; }
+
+.co-items-list,
+.co-totals {
+  transition: border-color .3s ease, box-shadow .3s ease, transform .3s var(--ease-spring);
+}
+.co-items-list:hover,
+.co-totals:hover {
+  border-color: var(--gold-border-hi);
+  box-shadow: 0 8px 22px rgba(200, 130, 10, .1), var(--shadow-inset);
+  transform: translateY(-2px);
+}
+.co-item {
+  transition: transform .25s var(--ease-spring), background .25s ease;
+}
+.co-item:hover { transform: translateX(4px); }
+.co-item:hover .checkout-item-image { transform: scale(1.08) rotate(-3deg); }
+.checkout-item-image { transition: transform .3s var(--ease-spring), box-shadow .3s ease; }
+
+.co-tip-btn { position: relative; overflow: hidden; }
+.co-tip-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 25%, rgba(255, 255, 255, .3) 50%, transparent 75%);
+  transform: translateX(-120%);
+  transition: transform .65s ease;
+}
+.co-tip-btn:hover::after,
+.co-tip-btn.active::after { transform: translateX(120%); }
+.co-tip-btn.active { animation: tipSelected .45s var(--ease-spring) both, tipBreath 3s ease-in-out .5s infinite; }
+
+.pm-btn { position: relative; overflow: hidden; }
+.pm-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(125deg, transparent 30%, rgba(255, 255, 255, .22) 50%, transparent 70%);
+  transform: translateX(-130%);
+  transition: transform .7s ease;
+}
+.pm-btn:hover::before,
+.pm-btn.active::before { transform: translateX(130%); }
+.pm-icon .checkout-icon { width: 28px; height: 28px; color: var(--gold-lo); }
+.pm-btn.active .pm-icon .checkout-icon { color: var(--gold-hi); }
+.pm-icon .checkout-icon svg { animation-duration: 2.6s; }
+.pm-btn.active .pm-icon .checkout-icon svg { animation: paymentIconPulse 1.8s ease-in-out infinite; }
+
+.co-total-row { transition: transform .25s var(--ease-spring), color .25s ease; }
+.co-total-row:hover { transform: translateX(3px); }
+.co-total-row.grand { animation: totalReveal .7s var(--ease-spring) .5s both; }
+.co-place-btn span { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+.co-place-btn .checkout-icon { color: currentColor; width: 20px; height: 20px; }
+.co-place-btn .checkout-icon svg { animation: checkoutSpark 2s ease-in-out infinite; }
+.co-place-btn:hover .checkout-icon { transform: rotate(18deg) scale(1.15); }
+
+@keyframes checkoutHeaderGlow {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+@keyframes checkoutSectionIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes sectionLineGrow {
+  from { transform: scaleX(0); opacity: 0; }
+  to { transform: scaleX(1); opacity: 1; }
+}
+@keyframes checkoutIconFloat {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-2px) rotate(-3deg); }
+}
+@keyframes checkoutSpark {
+  0%, 100% { transform: scale(1) rotate(0); }
+  50% { transform: scale(1.16) rotate(10deg); }
+}
+@keyframes tipSelected {
+  from { transform: scale(.88); }
+  to { transform: translateY(-2px) scale(1); }
+}
+@keyframes tipBreath {
+  0%, 100% { box-shadow: 0 4px 14px rgba(200, 130, 10, .35); }
+  50% { box-shadow: 0 7px 22px rgba(200, 130, 10, .52); }
+}
+@keyframes paymentIconPulse {
+  0%, 100% { transform: scale(1) rotate(0); }
+  50% { transform: scale(1.16) rotate(-5deg); }
+}
+@keyframes totalReveal {
+  from { opacity: .4; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .checkout-modal > .modal-header,
+  .checkout-modal .co-section,
+  .checkout-icon svg,
+  .co-tip-btn.active,
+  .pm-btn.active .pm-icon .checkout-icon svg,
+  .co-total-row.grand { animation: none !important; }
+}
+
+/* ================================================================
    CART PANEL — animated order journey
    ================================================================ */
 .cart-panel {
@@ -4488,4 +4658,52 @@ select {
   .receipt-meta {
     font-size: 0.6rem;
   }
+}
+
+/* Dish Studio motion and inline icon system */
+.detail-icon { display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; flex:0 0 auto; color:var(--gold); }
+.detail-icon svg { width:100%; height:100%; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; filter:drop-shadow(0 0 5px rgba(216,153,35,.22)); animation:detailIconFloat 3.2s ease-in-out infinite; }
+.detail-icon-flame { color:var(--spice); }
+.detail-icon-shield { color:#38b978; }
+.detail-icon-warning { color:var(--spice); }
+.meta-pill-icon { display:flex; align-items:center; justify-content:center; width:30px; height:30px; font-size:0; }
+.meta-pill-icon .detail-icon { width:25px; height:25px; }
+.meta-pill:hover .detail-icon svg { color:var(--gold-hi); animation:detailIconBounce .65s ease-in-out; }
+.rating-score { margin-left:5px; color:var(--gold); font-family:var(--font-mono); font-size:.7rem; font-weight:700; }
+.tag { display:inline-flex; align-items:center; gap:4px; }
+.tag .detail-icon { width:13px; height:13px; }
+.tag .detail-icon svg { animation-duration:2.7s; }
+.modal-allergens strong { display:inline-flex; align-items:center; gap:4px; }
+.modal-allergens strong .detail-icon { width:15px; height:15px; }
+
+.dish-viewer { isolation:isolate; overflow:hidden; }
+.dish-viewer::before, .dish-viewer::after { animation:crystalRingPulse 4.5s ease-in-out infinite; }
+.dish-viewer-orbit { animation:orbitSpin 14s linear infinite; }
+.dish-viewer-glow { animation:dishGlow 4s ease-in-out infinite; }
+.dish-viewer-stage { animation:dishStageIn .8s cubic-bezier(.2,.8,.2,1) both; }
+.dish-viewer-image { animation:dishPhotoGlow 4.5s ease-in-out infinite; }
+.dish-viewer-fallback .detail-icon { width:78px; height:78px; color:var(--gold-hi); animation:fallbackFloat 3s ease-in-out infinite; }
+.dish-viewer-caption span { transition:color .25s ease, letter-spacing .25s ease; }
+.dish-viewer:hover .dish-viewer-caption span { color:var(--gold-hi); letter-spacing:.08em; }
+
+.modal-meta-grid .meta-pill { animation:metaPillIn .55s cubic-bezier(.2,.8,.2,1) both; }
+.modal-meta-grid .meta-pill:nth-child(2) { animation-delay:.07s; }
+.modal-meta-grid .meta-pill:nth-child(3) { animation-delay:.14s; }
+.modal-meta-grid .meta-pill:nth-child(4) { animation-delay:.21s; }
+.modal-tags .tag { animation:tagIn .45s ease both; }
+.modal-tags .tag:nth-child(2) { animation-delay:.08s; }
+
+@keyframes detailIconFloat { 0%,100% { transform:translateY(0) rotate(0); } 50% { transform:translateY(-2px) rotate(-3deg); } }
+@keyframes detailIconBounce { 0%,100% { transform:scale(1); } 45% { transform:scale(1.22) rotate(7deg); } 75% { transform:scale(.94); } }
+@keyframes crystalRingPulse { 0%,100% { opacity:.45; transform:scale(.98); } 50% { opacity:.9; transform:scale(1.035); } }
+@keyframes orbitSpin { to { transform:rotate(360deg); } }
+@keyframes dishGlow { 0%,100% { opacity:.5; filter:blur(22px); } 50% { opacity:.85; filter:blur(30px); } }
+@keyframes dishStageIn { from { opacity:0; filter:blur(8px); } to { opacity:1; filter:blur(0); } }
+@keyframes dishPhotoGlow { 0%,100% { filter:drop-shadow(0 18px 24px rgba(0,0,0,.3)); } 50% { filter:drop-shadow(0 22px 30px rgba(218,157,47,.25)); } }
+@keyframes fallbackFloat { 0%,100% { transform:translateY(0) rotate(-3deg); } 50% { transform:translateY(-8px) rotate(3deg); } }
+@keyframes metaPillIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+@keyframes tagIn { from { opacity:0; transform:scale(.86); } to { opacity:1; transform:scale(1); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .detail-icon svg, .dish-viewer::before, .dish-viewer::after, .dish-viewer-orbit, .dish-viewer-glow, .dish-viewer-stage, .dish-viewer-image, .dish-viewer-fallback .detail-icon, .modal-meta-grid .meta-pill, .modal-tags .tag { animation:none !important; }
 }

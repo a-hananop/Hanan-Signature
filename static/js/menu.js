@@ -80,7 +80,33 @@ const Menu = (() => {
       spicy: "tag-spicy", "chef-special": "tag-special", "gluten-free": "tag-gf"
     }[t] || "tag-popular";
   }
-  function tagLabel(t) {
+ function tagLabel(t) {
+    var labels = {
+      vegetarian: "Vegetarian", vegan: "Vegan", popular: "Popular", spicy: "Spicy",
+      "chef-special": "Chef's Special", "gluten-free": "Gluten-Free"
+    };
+    return labels[t] || t;
+  }
+
+  function detailIcon(name) {
+    var paths = {
+      flame: "<path d='M12 21c4.2 0 7-2.7 7-6.5 0-3.1-1.8-5.4-4.1-7.4.1 2-1 3.3-2.2 4.1.2-3.6-1.4-6.2-4.4-8.2.2 3.3-2.8 5.5-2.8 9.1C5.5 17.9 8.3 21 12 21Z'/><path d='M9.7 16.8c0-1.4 1-2.4 2.2-3.6.8 1.1 1.6 2.1 1.6 3.6a1.9 1.9 0 0 1-3.8 0Z'/> ",
+      clock: "<circle cx='12' cy='12' r='8.5'/><path d='M12 7v5l3.2 2'/><path d='M8 3.8 6.5 2.5M16 3.8l1.5-1.3'/>",
+      star: "<path d='m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3Z'/>",
+      shield: "<path d='M12 3 19 6v5.2c0 4.3-2.8 7.3-7 8.8-4.2-1.5-7-4.5-7-8.8V6l7-3Z'/><path d='m8.5 12 2.2 2.2 4.8-4.8'/>",
+      warning: "<path d='m12 4 8 14H4L12 4Z'/><path d='M12 9v4'/><circle cx='12' cy='16' r='.6' fill='currentColor' stroke='none'/>",
+      leaf: "<path d='M19.5 4.5C12 4.6 6 7.1 6 13c0 2.2 1.8 4 4 4 5.9 0 8.4-6 9.5-12.5Z'/><path d='M4 21c2.2-4.4 5.6-7.4 10-10'/>",
+      chef: "<path d='M7 10h10v9H7z'/><path d='M6 10a3 3 0 1 1 2.5-4.7A3.8 3.8 0 0 1 15.5 6 3 3 0 1 1 18 10'/><path d='M5 21h14'/>",
+      cart: "<path d='M4 5h2l1.3 9.2a2 2 0 0 0 2 1.8h6.9a2 2 0 0 0 1.9-1.4L20 8H7'/><circle cx='10' cy='19' r='1.2'/><circle cx='17' cy='19' r='1.2'/>",
+      plus: "<path d='M12 5v14M5 12h14'/>",
+      minus: "<path d='M5 12h14'/>",
+    };
+    return "<span class='detail-icon detail-icon-" + name + "' aria-hidden='true'><svg viewBox='0 0 24 24' focusable='false'>" + (paths[name] || paths.star) + "</svg></span>";
+  }
+
+  function tagMarkup(t) {
+    var icons = { vegetarian: "leaf", vegan: "leaf", popular: "star", spicy: "flame", "chef-special": "chef", "gluten-free": "leaf" };
+    return "<span class='tag " + tagClass(t) + "'>" + detailIcon(icons[t] || "star") + "<span>" + tagLabel(t) + "</span></span>";
     return {
       vegetarian: "🌿 Veg", vegan: "🌱 Vegan", popular: "⭐ Popular",
       spicy: "🌶️ Spicy", "chef-special": "👨‍🍳 Special", "gluten-free": "🌾 GF"
@@ -151,7 +177,7 @@ const Menu = (() => {
           ? "<span style='color:var(--emerald-hi);font-size:.65rem;font-weight:700;margin-left:4px'>✓ ×" + inCart.qty + "</span>"
           : "";
         var tagsHtml = item.tags.map(function (t) {
-          return "<span class='tag " + tagClass(t) + "'>" + tagLabel(t) + "</span>";
+          return tagMarkup(t);
         }).join("");
         var delay = Math.min(idx * 0.04, 0.5).toFixed(2);
 
@@ -215,7 +241,7 @@ const Menu = (() => {
       "<div class='dish-viewer-orbit'></div>" +
       "<div class='dish-viewer-stage' id='dishViewerStage'>" +
       "<img class='dish-viewer-image' id='dishViewerImage' src='" + imageSrc(item) + "' alt='" + App.escHtml(item.name) + "' onerror=\"this.style.display='none';this.nextElementSibling.style.display='grid'\">" +
-      "<div class='dish-viewer-fallback' aria-hidden='true'>" + item.emoji + "</div>" +
+      "<div class='dish-viewer-fallback' aria-hidden='true'>" + detailIcon("chef") + "</div>" +
       "</div>" +
       "<div class='dish-viewer-caption'><span>Interactive presentation</span><span>Drag to rotate · scroll to zoom</span></div>" +
       "</div>";
@@ -240,27 +266,27 @@ const Menu = (() => {
 
     var allergenText = item.allergens.length ? item.allergens.join(", ") : "None declared";
     var tagsHtml = item.tags.map(function (t) {
-      return "<span class='tag " + tagClass(t) + "'>" + tagLabel(t) + "</span>";
+      return tagMarkup(t);
     }).join("");
     var currentQty = App.state.cart[id] ? App.state.cart[id].qty : 1;
     var existingNote = App.state.cart[id] ? (App.state.cart[id].note || "") : "";
-    var ratingHtml = "<span style='color:var(--gold);letter-spacing:1px'>" + starsHtml(item.rating) + "</span>" +
+    var ratingHtml = detailIcon("star") + "<span class='rating-score'>" + Number(item.rating).toFixed(1) + "/5</span>" +
       " <span style='font-size:.7rem;opacity:.7'>(" + item.votes + ")</span>";
 
     body.innerHTML =
       "<p class='modal-desc'>" + App.escHtml(item.desc) + "</p>" +
       "<div class='modal-meta-grid'>" +
-      "<div class='meta-pill'><span class='meta-pill-icon'>🔥</span>" +
+      "<div class='meta-pill'><span class='meta-pill-icon'>" + detailIcon("flame") + "</span>" +
       "<div><div class='meta-pill-label'>Calories</div><div class='meta-pill-val'>" + item.calories + " kcal</div></div></div>" +
-      "<div class='meta-pill'><span class='meta-pill-icon'>⏱️</span>" +
+      "<div class='meta-pill'><span class='meta-pill-icon'>" + detailIcon("clock") + "</span>" +
       "<div><div class='meta-pill-label'>Prep Time</div><div class='meta-pill-val'>~" + item.prep + " min</div></div></div>" +
-      "<div class='meta-pill'><span class='meta-pill-icon'>⭐</span>" +
+      "<div class='meta-pill'><span class='meta-pill-icon'>" + detailIcon("star") + "</span>" +
       "<div><div class='meta-pill-label'>Rating</div><div class='meta-pill-val'>" + ratingHtml + "</div></div></div>" +
-      "<div class='meta-pill'><span class='meta-pill-icon'>✅</span>" +
+      "<div class='meta-pill'><span class='meta-pill-icon'>" + detailIcon("shield") + "</span>" +
       "<div><div class='meta-pill-label'>Certified</div><div class='meta-pill-val'>100% Halal</div></div></div>" +
       "</div>" +
       "<div class='modal-tags'>" + tagsHtml + "</div>" +
-      "<div class='modal-allergens'><strong>⚠️ Allergens:</strong> " + allergenText + "</div>" +
+      "<div class='modal-allergens'><strong>" + detailIcon("warning") + "Allergens:</strong> " + allergenText + "</div>" +
       "<textarea class='modal-note-input' id='modalNote'" +
       " placeholder='Special requests? e.g. extra spicy, no coriander, less salt…'" +
       " aria-label='Special instructions'>" + App.escHtml(existingNote) + "</textarea>" +
