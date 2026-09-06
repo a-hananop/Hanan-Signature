@@ -1,0 +1,402 @@
+/*
+ * animations.css — Hanan Signature ✦ Enhanced Edition
+ * All @keyframes, animation utilities, and transition helpers
+ */
+
+/* ══════════════════════════════════════════════════
+   INTRO / SPLASH SCREEN
+   ══════════════════════════════════════════════════ */
+@keyframes introExit {
+  0%   { opacity: 1; transform: scale(1); }
+  60%  { opacity: 1; transform: scale(1.03); }
+  100% { opacity: 0; transform: scale(1.08); pointer-events: none; visibility: hidden; }
+}
+
+@keyframes introFadeUp {
+  from { opacity: 0; transform: translateY(40px) scale(0.88); filter: blur(8px); }
+  to   { opacity: 1; transform: none; filter: blur(0); }
+}
+
+@keyframes lineGrow {
+  from { width: 0; opacity: 0; }
+  to   { width: 100px; opacity: 1; }
+}
+
+@keyframes introOrnamentsIn {
+  from { opacity: 0; transform: scale(0.6) rotate(-15deg); }
+  to   { opacity: 0.12; transform: scale(1) rotate(0deg); }
+}
+
+@keyframes introTaglineIn {
+  from { opacity: 0; letter-spacing: 0.6em; }
+  to   { opacity: 0.7; letter-spacing: 0.45em; }
+}
+
+@keyframes glowPulse {
+  0%, 100% { text-shadow: 0 0 40px rgba(229,153,13,0.4), 0 0 80px rgba(229,153,13,0.2); }
+  50%       { text-shadow: 0 0 60px rgba(229,153,13,0.7), 0 0 120px rgba(229,153,13,0.35); }
+}
+
+@keyframes introParticle {
+  0%   { opacity: 0; transform: translateY(0) scale(0); }
+  30%  { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-120px) scale(1.5); }
+}
+
+/* ── Header / Layout Entrances ───────────────────────── */
+@keyframes headerDrop {
+  from { transform: translateY(-100%); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes barSlide {
+  from { opacity: 0; transform: translateY(-16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes sideIn {
+  from { opacity: 0; transform: translateX(-28px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes rightIn {
+  from { opacity: 0; transform: translateX(28px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Header Cart Badge ───────────────────────────────── */
+@keyframes ping {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(74,222,128,.6); }
+  50%       { box-shadow: 0 0 0 8px rgba(74,222,128,0); }
+}
+
+@keyframes bump {
+  0%   { transform: scale(1); }
+  25%  { transform: scale(1.85) rotate(-8deg); }
+  55%  { transform: scale(0.82) rotate(4deg); }
+  75%  { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+/* ── Chat Messages ───────────────────────────────────── */
+@keyframes msgInBot {
+  from { opacity: 0; transform: translateX(-18px) translateY(8px) scale(0.94); filter: blur(2px); }
+  to   { opacity: 1; transform: none; filter: blur(0); }
+}
+
+@keyframes msgInUser {
+  from { opacity: 0; transform: translateX(18px) translateY(8px) scale(0.94); filter: blur(2px); }
+  to   { opacity: 1; transform: none; filter: blur(0); }
+}
+
+/* ── Typing Indicator ────────────────────────────────── */
+@keyframes typingBounce {
+  0%, 60%, 100% { transform: translateY(0) scale(1); }
+  30%            { transform: translateY(-8px) scale(1.2); }
+}
+
+@keyframes typingFade {
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 1; }
+}
+
+/* ── Cart / Menu Items ───────────────────────────────── */
+@keyframes itemIn {
+  from { opacity: 0; transform: translateX(18px) scale(0.93); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes itemInLeft {
+  from { opacity: 0; transform: translateX(-18px) scale(0.95); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes cartItemRemove {
+  0%   { opacity: 1; transform: translateX(0) scale(1); max-height: 120px; }
+  50%  { opacity: 0.3; transform: translateX(30px) scale(0.85); }
+  100% { opacity: 0; transform: translateX(60px) scale(0.7); max-height: 0; padding: 0; margin: 0; }
+}
+
+/* ── Empty Cart Float ────────────────────────────────── */
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50%       { transform: translateY(-12px) rotate(2deg); }
+}
+
+@keyframes floatGentle {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-6px); }
+}
+
+/* ── Order Progress ──────────────────────────────────── */
+@keyframes progPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(200,130,10,0), 0 0 0 0 rgba(200,130,10,0.4); }
+  50%       { box-shadow: 0 0 0 8px rgba(200,130,10,0), 0 0 0 4px rgba(200,130,10,0.3); }
+}
+
+@keyframes progFillAnim {
+  from { background-position: 200% center; }
+  to   { background-position: -200% center; }
+}
+
+/* ── Modal ───────────────────────────────────────────── */
+@keyframes overlayIn {
+  from { opacity: 0; backdrop-filter: blur(0); }
+  to   { opacity: 1; backdrop-filter: blur(8px); }
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.84) translateY(28px); filter: blur(4px); }
+  60%  { transform: scale(1.02) translateY(-3px); filter: blur(0); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes modalOut {
+  from { opacity: 1; transform: scale(1); }
+  to   { opacity: 0; transform: scale(0.9) translateY(20px); }
+}
+
+/* ── Success Screen ──────────────────────────────────── */
+@keyframes successBounce {
+  0%  { transform: scale(0) rotate(-25deg); opacity: 0; }
+  50% { transform: scale(1.25) rotate(5deg); opacity: 1; }
+  70% { transform: scale(0.9) rotate(-3deg); }
+  100%{ transform: scale(1) rotate(0); }
+}
+
+@keyframes successRing {
+  0%   { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+@keyframes receiptPrint {
+  0%   { opacity: 0; transform: translateY(-60px) rotateX(15deg) scale(0.95); }
+  60%  { opacity: 1; transform: translateY(4px) rotateX(-2deg) scale(1.01); }
+  100% { opacity: 1; transform: translateY(0) rotateX(0) scale(1); }
+}
+
+/* ── Toast ───────────────────────────────────────────── */
+@keyframes toastIn {
+  from { transform: translateX(110%) scale(0.9); opacity: 0; }
+  60%  { transform: translateX(-6px) scale(1.02); opacity: 1; }
+  to   { transform: translateX(0) scale(1); opacity: 1; }
+}
+
+@keyframes toastOut {
+  from { transform: translateX(0) scale(1); opacity: 1; }
+  to   { transform: translateX(110%) scale(0.9); opacity: 0; }
+}
+
+/* ── Voice ───────────────────────────────────────────── */
+@keyframes voicePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(184,59,12,0.5), 0 0 0 0 rgba(184,59,12,0.3); }
+  50%       { box-shadow: 0 0 0 12px rgba(184,59,12,0), 0 0 0 24px rgba(184,59,12,0); }
+}
+
+@keyframes voiceRipple {
+  0%   { transform: scale(1); opacity: 1; }
+  100% { transform: scale(2.8); opacity: 0; }
+}
+
+/* ── Shimmer ─────────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* ── Quick Reply ─────────────────────────────────────── */
+@keyframes qrIn {
+  from { opacity: 0; transform: translateY(10px) scale(0.88); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ── Chip Active Indicator ───────────────────────────── */
+@keyframes chipPop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.14); }
+  100% { transform: scale(1); }
+}
+
+/* ── Gold shimmer on brand ───────────────────────────── */
+@keyframes goldShimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* ── Card accent bar ─────────────────────────────────── */
+@keyframes accentGrow {
+  from { transform: scaleY(0) scaleX(1); }
+  to   { transform: scaleY(1) scaleX(1); }
+}
+
+/* ── Halal dot pulse ─────────────────────────────────── */
+@keyframes halalPing {
+  0%   { box-shadow: 0 0 0 0 rgba(74,222,128,0.7); }
+  70%  { box-shadow: 0 0 0 10px rgba(74,222,128,0); }
+  100% { box-shadow: 0 0 0 0 rgba(74,222,128,0); }
+}
+
+/* ── Notification dot ────────────────────────────────── */
+@keyframes dotBreathe {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.6; transform: scale(0.85); }
+}
+
+/* ── Background ornament drift ───────────────────────── */
+@keyframes ornamentDrift {
+  0%   { transform: translateY(0) rotate(0deg); }
+  50%  { transform: translateY(-30px) rotate(180deg); }
+  100% { transform: translateY(0) rotate(360deg); }
+}
+
+/* ── Scanline overlay ────────────────────────────────── */
+@keyframes scanMove {
+  from { background-position: 0 0; }
+  to   { background-position: 0 100%; }
+}
+/* ══════════════════════════════════════════════════
+   ENHANCED ANIMATIONS v2
+   ══════════════════════════════════════════════════ */
+
+/* ── Card 3D depth on hover ── */
+@keyframes cardLift {
+  0%   { transform: translateY(0) translateX(0) scale(1) rotateX(0deg) rotateY(0deg); }
+  100% { transform: translateY(-6px) translateX(3px) scale(1.01) rotateX(1.5deg) rotateY(-1deg); }
+}
+
+/* ── Gold shimmer sweep ── */
+@keyframes shimmerSweep {
+  0%   { background-position: -300% center; }
+  100% { background-position: 300% center; }
+}
+
+/* ── Spotlight reveal on hover ── */
+@keyframes spotlightIn {
+  from { opacity: 0; transform: scale(0.5); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ── Staggered card entrance ── */
+@keyframes cardEntrance {
+  0%   { opacity: 0; transform: translateY(24px) scale(0.94); filter: blur(4px); }
+  60%  { filter: blur(0); }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+/* ── Subtle pulse for live indicators ── */
+@keyframes livePulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%       { transform: scale(1.5); opacity: 0.6; }
+}
+
+/* ── Number tick (price change) ── */
+@keyframes numTick {
+  0%   { transform: translateY(-100%) scale(0.8); opacity: 0; }
+  60%  { transform: translateY(4px) scale(1.05); opacity: 1; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* ── Magnetic attraction for CTA buttons ── */
+@keyframes magnetPulse {
+  0%, 100% { box-shadow: 0 4px 20px rgba(200,130,10,0.2), 0 0 0 0 rgba(200,130,10,0.3); }
+  50%       { box-shadow: 0 8px 32px rgba(200,130,10,0.35), 0 0 0 6px rgba(200,130,10,0); }
+}
+
+/* ── Tag pop entrance ── */
+@keyframes tagPop {
+  0%   { opacity: 0; transform: scale(0.6) translateY(4px); }
+  70%  { transform: scale(1.08) translateY(-1px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* ── Chat bubble tail wiggle ── */
+@keyframes bubbleWiggle {
+  0%, 100% { transform: skewX(0deg); }
+  25%       { transform: skewX(-2deg); }
+  75%       { transform: skewX(1deg); }
+}
+
+/* ── Cart item slide in from right with spring ── */
+@keyframes cartSlideIn {
+  0%   { opacity: 0; transform: translateX(40px) scale(0.9); }
+  60%  { transform: translateX(-4px) scale(1.01); opacity: 1; }
+  100% { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+/* ── Glowing border sweep ── */
+@keyframes borderGlow {
+  0%   { box-shadow: 0 0 0 0 rgba(200,130,10,0.4), inset 0 0 0 1px transparent; }
+  50%  { box-shadow: 0 0 20px 4px rgba(200,130,10,0.15), inset 0 0 0 1px rgba(200,130,10,0.2); }
+  100% { box-shadow: 0 0 0 0 rgba(200,130,10,0), inset 0 0 0 1px transparent; }
+}
+
+/* ── Intro particle burst ── */
+@keyframes particleBurst {
+  0%   { opacity: 1; transform: translate(0,0) scale(1); }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0); }
+}
+
+/* ── Sidebar category slide ── */
+@keyframes catSlide {
+  from { opacity: 0; transform: translateX(-14px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ── Checkout button idle breath ── */
+@keyframes ctaBreath {
+  0%, 100% { box-shadow: 0 4px 20px rgba(22,11,4,0.25), 0 0 0 0 rgba(200,130,10,0); }
+  50%       { box-shadow: 0 8px 32px rgba(22,11,4,0.35), 0 0 0 4px rgba(200,130,10,0.12); }
+}
+
+/* ── Ripple expand ── */
+@keyframes rippleOut {
+  from { transform: translate(-50%,-50%) scale(0); opacity: 0.4; }
+  to   { transform: translate(-50%,-50%) scale(4); opacity: 0; }
+}
+
+/* ── Star rating pop ── */
+@keyframes starPop {
+  0%   { transform: scale(0) rotate(-30deg); opacity: 0; }
+  65%  { transform: scale(1.3) rotate(5deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+/* ── Slide from bottom for mobile panels ── */
+@keyframes panelSlideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Filter bar shimmer pulse ── */
+@keyframes filterPulse {
+  0%, 100% { background-size: 200% auto; background-position: 0% center; }
+  50%       { background-position: 100% center; }
+}
+
+/* ── Success confetti ── */
+@keyframes confettiFall {
+  0%   { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(80px) rotate(540deg); opacity: 0; }
+}
+
+/* ── Avatar glow on new message ── */
+@keyframes avatarGlow {
+  0%, 100% { box-shadow: 0 4px 12px rgba(22,11,4,0.3), 0 0 0 0 rgba(200,130,10,0); }
+  50%       { box-shadow: 0 4px 20px rgba(22,11,4,0.4), 0 0 0 5px rgba(200,130,10,0.15); }
+}
+
+/* ── Wavy underline ── */
+@keyframes waveMove {
+  from { background-position: 0 0; }
+  to   { background-position: 40px 0; }
+}

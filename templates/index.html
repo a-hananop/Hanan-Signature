@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <meta name="description" content="Hanan Signature — Authentic Pakistani Fine Dining. Order online with our AI assistant."/>
+  <meta name="theme-color" content="#160b04"/>
+  <title>Hanan Signature ✦ Authentic Pakistani Fine Dining</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600;1,700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}"/>
+</head>
+<body>
+
+<!-- ── INTRO / SPLASH ─────────────────────────────── -->
+<div id="introScreen" aria-label="Loading" aria-live="polite">
+  <div class="intro-wrap">
+    <div class="intro-top-line"></div>
+    <div class="intro-ornament"><span aria-hidden="true">✦</span></div>
+    <div class="intro-name">Hanan Signature</div>
+    <div class="intro-tagline">Authentic Pakistani Fine Dining · Est. 2018</div>
+    <div class="intro-bot-line"></div>
+    <button class="intro-enter-btn" id="introEnterBtn" aria-label="Begin Dining Experience">
+      <span>Begin Experience</span>
+      <div class="btn-glow"></div>
+    </button>
+  </div>
+</div>
+
+<!-- ── HEADER ─────────────────────────────────────── -->
+<header class="header" role="banner">
+  <div class="header-brand">
+    <div class="brand-name">Hanan Signature</div>
+    <span class="brand-sub">Exquisite Culinary Experience · Est. 2018</span>
+  </div>
+
+  <div class="header-center" role="search">
+    <svg class="search-svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+    </svg>
+    <input class="search-input-inline" id="searchInput" type="search"
+           placeholder="Search biryani, karahi… (or press /)"
+           autocomplete="off" aria-label="Search menu items"/>
+  </div>
+
+  <div class="header-actions">
+    <div class="hal-badge" title="All food is 100% Halal certified">
+      <div class="hal-dot"></div>100% Halal
+    </div>
+    <!-- cartToggleBtn: on mobile opens cart panel -->
+    <button class="h-btn" id="cartToggleBtn" title="View Cart" aria-label="View cart">
+      🛒<span class="cart-badge" id="cartBadge" aria-live="polite">0</span>
+    </button>
+  </div>
+</header>
+
+<!-- ── FILTER BAR ──────────────────────────────────── -->
+<nav class="filter-bar" aria-label="Menu filters">
+  <span class="filter-label" aria-hidden="true">Filter:</span>
+  <button class="chip active" data-filter="all"          aria-pressed="true">All Dishes</button>
+  <button class="chip"        data-filter="popular"      aria-pressed="false">⭐ Popular</button>
+  <button class="chip"        data-filter="vegetarian"   aria-pressed="false">🌿 Vegetarian</button>
+  <button class="chip"        data-filter="gluten-free"  aria-pressed="false">🌾 Gluten-Free</button>
+  <button class="chip"        data-filter="spicy"        aria-pressed="false">🌶️ Spicy</button>
+  <button class="chip"        data-filter="chef-special" aria-pressed="false">👨‍🍳 Chef's Special</button>
+</nav>
+
+<!-- ── MAIN 3-COLUMN LAYOUT ───────────────────────── -->
+<div class="layout">
+
+  <!-- LEFT: MENU PANEL -->
+  <aside class="menu-sidebar" id="panelMenu" aria-label="Menu">
+    <div class="sidebar-cats">
+      <div class="sidebar-cats-title">Our Menu</div>
+      <nav id="catNav" aria-label="Categories">
+        <button class="cat-btn active" data-cat="all">
+          <span class="cat-icon" aria-hidden="true">🍽️</span>All Categories
+          <span class="cat-count" id="cnt-all"></span>
+        </button>
+        <button class="cat-btn" data-cat="specials">
+          <span class="cat-icon" aria-hidden="true">✨</span>Chef's Signatures
+          <span class="cat-count" id="cnt-specials"></span>
+        </button>
+        <button class="cat-btn" data-cat="starters">
+          <span class="cat-icon" aria-hidden="true">🥙</span>Starters &amp; Snacks
+          <span class="cat-count" id="cnt-starters"></span>
+        </button>
+        <button class="cat-btn" data-cat="mains">
+          <span class="cat-icon" aria-hidden="true">🍛</span>Main Course
+          <span class="cat-count" id="cnt-mains"></span>
+        </button>
+        <button class="cat-btn" data-cat="desserts">
+          <span class="cat-icon" aria-hidden="true">🍮</span>Desserts &amp; Mithai
+          <span class="cat-count" id="cnt-desserts"></span>
+        </button>
+        <button class="cat-btn" data-cat="drinks">
+          <span class="cat-icon" aria-hidden="true">🥤</span>Drinks &amp; Beverages
+          <span class="cat-count" id="cnt-drinks"></span>
+        </button>
+      </nav>
+    </div>
+    <div class="menu-list" id="menuList" role="list" aria-label="Menu items"></div>
+  </aside>
+
+  <!-- CENTER: CHAT PANEL -->
+  <main class="chat-zone" id="panelChat" aria-label="Chat assistant">
+    <div class="chat-top-info">
+      <div class="chat-header-left">
+        <img src="{{ url_for('static', filename='images/chef.svg') }}" class="chef-avatar" aria-hidden="true" alt="Chef Avatar" />
+        <span class="chat-top-label">Personal Dining Assistant</span>
+      </div>
+      <div class="table-select-wrap">
+        <label class="table-label" for="tableSelect">Table</label>
+        <select class="table-select" id="tableSelect" aria-label="Select table number">
+          <option value="">— Select —</option>
+          <option value="1">Table 1</option><option value="2">Table 2</option>
+          <option value="3">Table 3</option><option value="4">Table 4</option>
+          <option value="5">Table 5</option><option value="6">Table 6</option>
+          <option value="7">Table 7</option><option value="8">Table 8</option>
+          <option value="9">Table 9</option><option value="10">Table 10</option>
+          <option value="VIP-1">VIP Room 1</option><option value="VIP-2">VIP Room 2</option>
+          <option value="Takeaway">Takeaway</option>
+        </select>
+      </div>
+    </div>
+    <div class="chat-scroll" id="chatScroll" role="log" aria-live="polite">
+      <div class="chat-messages" id="chatMessages"></div>
+    </div>
+    <div class="chat-input-area">
+      <div class="chat-input-row">
+        <textarea class="chat-input-box" id="chatInput"
+          placeholder="Try: 'Add 2 chicken karahi' or 'Show me desserts'…"
+          rows="1" aria-label="Chat message" autocomplete="off"></textarea>
+        <!-- voice.js injects a voice button before sendBtn -->
+        <button class="send-btn" id="sendBtn" aria-label="Send message">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.3" stroke-linecap="round"
+               stroke-linejoin="round" aria-hidden="true">
+            <line x1="22" y1="2" x2="11" y2="13"/>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+        </button>
+      </div>
+      <div class="chat-hint" aria-hidden="true">
+        Enter to send · Shift+Enter for new line · 🎤 voice · / to search
+      </div>
+    </div>
+  </main>
+
+  <!-- RIGHT: CART PANEL -->
+  <aside class="cart-panel" id="panelCart" aria-label="Your order">
+    <div class="cart-head">
+      <div class="cart-head-top">
+        <div class="cart-title">Your Order</div>
+        <button class="cart-clear-btn" id="cartClearBtn" aria-label="Clear cart">Clear All</button>
+      </div>
+      <!-- Order progress bar -->
+      <div class="order-progress" id="orderProgress"
+           role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="3">
+        <div class="prog-fill" id="progFill" style="width:8%"></div>
+        <div class="prog-step-item active" data-step="0">
+          <div class="prog-icon-wrap" aria-hidden="true">🛒</div>
+          <div class="prog-lbl">Order</div>
+        </div>
+        <div class="prog-step-item" data-step="1">
+          <div class="prog-icon-wrap" aria-hidden="true">👨‍🍳</div>
+          <div class="prog-lbl">Kitchen</div>
+        </div>
+        <div class="prog-step-item" data-step="2">
+          <div class="prog-icon-wrap" aria-hidden="true">🍽️</div>
+          <div class="prog-lbl">Prep</div>
+        </div>
+        <div class="prog-step-item" data-step="3">
+          <div class="prog-icon-wrap" aria-hidden="true">✅</div>
+          <div class="prog-lbl">Ready</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cart-items" id="cartItems" role="list" aria-label="Cart items">
+      <div class="cart-empty" id="cartEmpty">
+        <div class="cart-empty-icon" aria-hidden="true">🍽️</div>
+        <p>Your table is empty</p>
+        <small>Browse our authentic Pakistani menu<br>and add your favourite dishes!</small>
+      </div>
+    </div>
+
+    <div class="cart-footer" id="cartFooter" style="display:none">
+      <div class="tip-row" role="group" aria-label="Gratuity">
+        <span class="tip-row-label">Gratuity</span>
+        <button class="tip-btn"        data-tip="0"    aria-pressed="false">None</button>
+        <button class="tip-btn"        data-tip="0.10" aria-pressed="false">10%</button>
+        <button class="tip-btn active" data-tip="0.15" aria-pressed="true">15%</button>
+        <button class="tip-btn"        data-tip="0.20" aria-pressed="false">20%</button>
+      </div>
+      <table class="totals-table" aria-label="Order totals">
+        <tbody>
+          <tr><td>Subtotal</td><td id="subtotalCell">$0.00</td></tr>
+          <tr><td>Gratuity</td><td id="tipCell">$0.00</td></tr>
+          <tr><td>Tax (8.875%)</td><td id="taxCell">$0.00</td></tr>
+          <tr><td>Service (12%)</td><td id="serviceCell">$0.00</td></tr>
+          <tr class="total-row"><td>Total</td><td id="totalCell">$0.00</td></tr>
+        </tbody>
+      </table>
+      <button class="checkout-btn" id="checkoutBtn" disabled aria-label="Place order">
+        <span>✦ Place Order</span>
+      </button>
+    </div>
+  </aside>
+
+</div><!-- /layout -->
+
+<!-- ── MOBILE BOTTOM TAB BAR ──────────────────────── -->
+<!-- Uses .mob-tab + data-panel="panelMenu/panelChat/panelCart" 
+     which matches App.showPanel() logic exactly -->
+<nav class="mob-tabbar" id="mobTabbar" aria-label="Navigation">
+  <div class="mob-tabbar-inner">
+    <button class="mob-tab" data-panel="panelMenu" aria-pressed="false" aria-label="Browse menu">
+      <span class="mob-icon" aria-hidden="true">🍽️</span>
+      <span class="mob-label">Menu</span>
+    </button>
+    <button class="mob-tab active" data-panel="panelChat" aria-pressed="true" aria-label="Chat">
+      <span class="mob-icon" aria-hidden="true">💬</span>
+      <span class="mob-label">Chat</span>
+    </button>
+    <button class="mob-tab" data-panel="panelCart" aria-pressed="false" aria-label="View cart">
+      <span class="mob-icon" aria-hidden="true">🛒</span>
+      <span class="mob-label">Cart</span>
+      <span class="mob-cart-badge" id="mobCartBadge" style="display:none">0</span>
+    </button>
+  </div>
+</nav>
+
+<!-- ── ITEM DETAIL MODAL ───────────────────────────── -->
+<div class="overlay" id="itemOverlay" role="dialog" aria-modal="true" aria-label="Item details">
+  <div class="modal" id="itemModal">
+    <button class="modal-close" id="itemModalClose" aria-label="Close">✕</button>
+    <div class="modal-header" id="modalHeader"></div>
+    <div class="modal-body"   id="modalBody"></div>
+  </div>
+</div>
+
+<!-- ── CHECKOUT MODAL ─────────────────────────────── -->
+<div class="overlay" id="checkoutOverlay" role="dialog" aria-modal="true" aria-label="Checkout">
+  <div class="modal checkout-modal" id="checkoutModal"></div>
+</div>
+
+<!-- ── SUCCESS / RECEIPT MODAL ───────────────────── -->
+<div class="overlay" id="successOverlay" role="dialog" aria-modal="true" aria-label="Order confirmed">
+  <div class="modal success-modal" id="successModal"></div>
+</div>
+
+<!-- ── TOAST CONTAINER ────────────────────────────── -->
+<div class="toast-container" id="toastContainer" role="alert" aria-live="assertive" aria-atomic="true"></div>
+
+<!-- ── SCRIPTS (load order matters) ──────────────── -->
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<script src="{{ url_for('static', filename='js/menu.js') }}"></script>
+<script src="{{ url_for('static', filename='js/cart.js') }}"></script>
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+<script src="{{ url_for('static', filename='js/payment.js') }}"></script>
+<script src="{{ url_for('static', filename='js/voice.js') }}"></script>
+<script>
+  App.init();
+  // Splash screen is now manual via 'Begin Experience' button
+</script>
+
+</body>
+</html>
