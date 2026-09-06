@@ -790,6 +790,151 @@
   backdrop-filter: blur(4px);
 }
 
+/* Animated table selector */
+.table-select-wrap {
+  position: relative;
+  z-index: 30;
+}
+.table-select-wrap .table-select {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+.table-select-trigger {
+  min-width: 112px;
+  height: 36px;
+  padding: 0 10px 0 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--mahogany);
+  font-family: var(--font-body);
+  font-size: .74rem;
+  background: linear-gradient(135deg, rgba(255, 252, 245, .92), rgba(253, 246, 232, .72));
+  border: 1px solid var(--gold-border);
+  border-radius: var(--r-md);
+  cursor: pointer;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .95), 0 4px 12px rgba(91, 54, 18, .08);
+  transition: transform .3s var(--ease-spring), border-color .25s ease, box-shadow .25s ease;
+}
+.table-select-trigger:hover,
+.table-select-trigger.open {
+  transform: translateY(-2px);
+  border-color: var(--gold-hi);
+  box-shadow: 0 8px 20px rgba(200, 130, 10, .2), 0 0 0 3px rgba(200, 130, 10, .1);
+}
+.table-trigger-icon {
+  color: var(--gold);
+  font-size: .72rem;
+  transition: transform .4s var(--ease-spring);
+}
+.table-select-trigger.open .table-trigger-icon { transform: rotate(180deg) scale(1.15); }
+.table-trigger-chevron {
+  color: var(--gold-lo);
+  font-size: 1.1rem;
+  line-height: .6;
+  transition: transform .35s var(--ease-spring);
+}
+.table-select-trigger.open .table-trigger-chevron { transform: rotate(180deg); }
+.table-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 9px);
+  right: 0;
+  width: 190px;
+  max-height: min(360px, 58vh);
+  padding: 7px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  overflow-y: auto;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(-8px) scale(.96);
+  transform-origin: top right;
+  pointer-events: none;
+  background: linear-gradient(145deg, rgba(255, 252, 245, .98), rgba(253, 246, 232, .95));
+  border: 1px solid var(--gold-border-hi);
+  border-radius: var(--r-lg);
+  box-shadow: 0 18px 40px rgba(22, 11, 4, .22), 0 0 0 5px rgba(200, 130, 10, .07), inset 0 1px 0 rgba(255, 255, 255, .95);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  transition: opacity .22s ease, transform .35s var(--ease-spring), visibility .22s;
+}
+.table-dropdown-menu.open {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+.table-dropdown-menu::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  right: 22px;
+  width: 9px;
+  height: 9px;
+  background: var(--cream-hi);
+  border-left: 1px solid var(--gold-border-hi);
+  border-top: 1px solid var(--gold-border-hi);
+  transform: rotate(45deg);
+}
+.table-dropdown-option {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  min-height: 34px;
+  padding: 7px 9px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  text-align: left;
+  color: var(--mahogany-lo);
+  font: 400 .76rem var(--font-body);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  opacity: 0;
+  transform: translateX(8px);
+}
+.table-dropdown-menu.open .table-dropdown-option {
+  animation: tableOptionIn .35s var(--ease-out) var(--option-delay) forwards;
+}
+.table-dropdown-option:hover,
+.table-dropdown-option.selected {
+  color: var(--mahogany);
+  background: linear-gradient(135deg, var(--gold-pale), rgba(240, 165, 26, .14));
+  border-color: var(--gold-border);
+  transform: translateX(3px);
+}
+.table-option-mark {
+  width: 14px;
+  color: var(--gold);
+  opacity: 0;
+  transform: scale(.5);
+  transition: all .2s var(--ease-spring);
+}
+.table-dropdown-option:hover .table-option-mark,
+.table-dropdown-option.selected .table-option-mark {
+  opacity: 1;
+  transform: scale(1);
+}
+@keyframes tableOptionIn {
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@media (max-width: 600px) {
+  .table-dropdown-menu {
+    right: -4px;
+    width: 178px;
+    max-height: 48vh;
+  }
+  .table-select-trigger { min-width: 104px; }
+}
+
 .msg.user .msg-bubble {
   background: linear-gradient(135deg, var(--mahogany), var(--mahogany-mid));
   color: var(--cream);
@@ -3146,6 +3291,168 @@ select {
 }
 
 /* ================================================================
+   CRYSTALLIC CHAT SPACE
+   Layered glass, prismatic light and a subtle 3D perspective grid keep
+   the assistant area visually alive even before the first message arrives.
+   ================================================================ */
+.chat-zone {
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse 42% 34% at 12% 18%, rgba(113, 213, 255, .28), transparent 72%),
+    radial-gradient(ellipse 45% 42% at 92% 82%, rgba(174, 126, 255, .22), transparent 72%),
+    radial-gradient(ellipse 52% 44% at 52% 44%, rgba(255, 255, 255, .92), transparent 76%),
+    linear-gradient(135deg, #eef8ff 0%, #f7f4ff 47%, #edf9f6 100%) !important;
+  border-color: rgba(133, 177, 211, .38);
+}
+
+.chat-zone::before {
+  z-index: -2;
+  opacity: .18 !important;
+  background-image:
+    radial-gradient(circle, rgba(63, 151, 196, .9) 1px, transparent 1.5px),
+    linear-gradient(125deg, transparent 0 45%, rgba(255, 255, 255, .9) 48%, transparent 52%);
+  background-size: 28px 28px, 100% 100%;
+  mask-image: linear-gradient(to bottom, black, transparent 90%);
+}
+
+.chat-zone::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: .68;
+  background:
+    linear-gradient(116deg, transparent 0 16%, rgba(255, 255, 255, .48) 16.3% 16.7%, transparent 17% 62%, rgba(255, 255, 255, .34) 62.3% 62.7%, transparent 63%),
+    linear-gradient(68deg, transparent 0 33%, rgba(127, 202, 239, .13) 33.3% 43%, transparent 43.3% 78%, rgba(196, 157, 255, .12) 78.3% 88%, transparent 88.3%),
+    repeating-linear-gradient(105deg, transparent 0 74px, rgba(103, 180, 219, .07) 75px, transparent 76px);
+  transform: perspective(900px) rotateX(1deg);
+  transform-origin: center bottom;
+}
+
+.chat-scroll {
+  perspective: 900px;
+  scrollbar-color: rgba(87, 161, 205, .55) transparent;
+  scrollbar-width: thin;
+}
+
+.chat-scroll::before,
+.chat-scroll::after {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: 50%;
+  filter: blur(1px);
+  mix-blend-mode: multiply;
+}
+.chat-scroll::before {
+  width: 170px;
+  height: 170px;
+  left: -72px;
+  top: 19%;
+  background: radial-gradient(circle at 35% 35%, rgba(113, 213, 255, .36), rgba(113, 213, 255, 0) 68%);
+  animation: crystalFloatA 12s ease-in-out infinite;
+}
+.chat-scroll::after {
+  width: 230px;
+  height: 230px;
+  right: -112px;
+  bottom: 10%;
+  background: radial-gradient(circle at 45% 45%, rgba(173, 126, 255, .3), rgba(173, 126, 255, 0) 68%);
+  animation: crystalFloatB 15s ease-in-out infinite;
+}
+
+.chat-messages {
+  position: relative;
+  z-index: 1;
+}
+.chat-messages:empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.chat-messages:empty::before {
+  content: '✦  Your private dining assistant is ready  ✦\A\AAsk about dishes, ingredients, prices, or recommendations';
+  white-space: pre-wrap;
+  text-align: center;
+  max-width: 290px;
+  padding: 28px 30px;
+  color: rgba(59, 91, 116, .72);
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  line-height: 1.65;
+  letter-spacing: .04em;
+  background: linear-gradient(145deg, rgba(255, 255, 255, .66), rgba(222, 244, 255, .3));
+  border: 1px solid rgba(255, 255, 255, .78);
+  border-radius: 28px;
+  box-shadow: 0 18px 44px rgba(70, 131, 166, .13), inset 0 1px 0 rgba(255, 255, 255, .95);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  animation: crystalCardBreath 4s ease-in-out infinite;
+}
+
+.chat-top-info,
+.chat-input-area {
+  position: relative;
+  z-index: 3;
+  background: linear-gradient(135deg, rgba(255, 255, 255, .72), rgba(235, 247, 255, .54), rgba(249, 240, 255, .58)) !important;
+  border-color: rgba(129, 177, 209, .38) !important;
+  box-shadow: 0 10px 28px rgba(66, 119, 151, .1), inset 0 1px 0 rgba(255, 255, 255, .9) !important;
+  backdrop-filter: blur(22px) saturate(165%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(165%) !important;
+}
+
+.chat-top-info::after,
+.chat-input-area::after {
+  content: '';
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: -1px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(91, 191, 230, .65), rgba(191, 143, 255, .55), transparent);
+}
+
+.chat-input-box {
+  background: linear-gradient(135deg, rgba(255, 255, 255, .8), rgba(236, 247, 255, .58)) !important;
+  border-color: rgba(112, 177, 210, .46) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .92), 0 8px 20px rgba(69, 128, 165, .1) !important;
+  backdrop-filter: blur(12px) !important;
+}
+.chat-input-box:focus {
+  border-color: rgba(71, 168, 214, .85) !important;
+  box-shadow: 0 0 0 3px rgba(86, 192, 233, .18), 0 10px 24px rgba(69, 128, 165, .16) !important;
+}
+
+.msg.bot .msg-bubble {
+  background: linear-gradient(145deg, rgba(255, 255, 255, .78), rgba(231, 247, 255, .55)) !important;
+  border-color: rgba(255, 255, 255, .86) !important;
+  box-shadow: 0 10px 24px rgba(67, 128, 164, .13), inset 0 1px 0 rgba(255, 255, 255, .95) !important;
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+}
+
+@keyframes crystalFloatA {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(38px, 24px, 0) scale(1.12); }
+}
+@keyframes crystalFloatB {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-30px, -26px, 0) scale(.9); }
+}
+@keyframes crystalCardBreath {
+  0%, 100% { transform: translateY(0) rotateX(0deg); }
+  50% { transform: translateY(-5px) rotateX(1deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chat-scroll::before,
+  .chat-scroll::after,
+  .chat-messages:empty::before { animation: none; }
+}
+
+/* ================================================================
    DISH STUDIO — centered interactive 3D-style photo presentation
    ================================================================ */
 .overlay#itemOverlay {
@@ -3368,6 +3675,87 @@ select {
     font-size: 2rem !important;
     letter-spacing: 0.04em !important;
   }
+}
+
+/* Final palette alignment: warm Hanan Signature crystal glass */
+.chat-zone {
+  background:
+    radial-gradient(ellipse 42% 34% at 12% 18%, rgba(200, 130, 10, .16), transparent 72%),
+    radial-gradient(ellipse 45% 42% at 92% 82%, rgba(184, 59, 12, .11), transparent 72%),
+    radial-gradient(ellipse 52% 44% at 52% 44%, rgba(255, 252, 245, .94), transparent 76%),
+    linear-gradient(135deg, #f8f0e2 0%, #fffaf1 48%, #f4ead7 100%) !important;
+  border-color: rgba(200, 130, 10, .28) !important;
+}
+.chat-zone::before {
+  background-image:
+    radial-gradient(circle, rgba(200, 130, 10, .75) 1px, transparent 1.5px),
+    linear-gradient(125deg, transparent 0 45%, rgba(255, 255, 255, .86) 48%, transparent 52%) !important;
+}
+.chat-zone::after {
+  background:
+    linear-gradient(116deg, transparent 0 16%, rgba(255, 255, 255, .58) 16.3% 16.7%, transparent 17% 62%, rgba(200, 130, 10, .2) 62.3% 62.7%, transparent 63%),
+    linear-gradient(68deg, transparent 0 33%, rgba(200, 130, 10, .09) 33.3% 43%, transparent 43.3% 78%, rgba(184, 59, 12, .07) 78.3% 88%, transparent 88.3%),
+    repeating-linear-gradient(105deg, transparent 0 74px, rgba(200, 130, 10, .055) 75px, transparent 76px) !important;
+}
+.chat-scroll::before {
+  background: radial-gradient(circle at 35% 35%, rgba(240, 165, 26, .25), rgba(240, 165, 26, 0) 68%) !important;
+}
+.chat-scroll::after {
+  background: radial-gradient(circle at 45% 45%, rgba(184, 59, 12, .16), rgba(184, 59, 12, 0) 68%) !important;
+}
+.chat-messages:empty::before {
+  color: rgba(70, 45, 25, .72);
+  background: linear-gradient(145deg, rgba(255, 252, 245, .78), rgba(253, 243, 220, .5));
+  border-color: rgba(200, 130, 10, .28);
+  box-shadow: 0 18px 44px rgba(104, 65, 24, .12), inset 0 1px 0 rgba(255, 255, 255, .95);
+}
+.chat-top-info,
+.chat-input-area {
+  background: linear-gradient(135deg, rgba(255, 252, 245, .82), rgba(253, 246, 232, .64), rgba(250, 239, 215, .64)) !important;
+  border-color: rgba(200, 130, 10, .3) !important;
+  box-shadow: 0 10px 28px rgba(91, 54, 18, .09), inset 0 1px 0 rgba(255, 255, 255, .94) !important;
+}
+.chat-top-info::after,
+.chat-input-area::after {
+  background: linear-gradient(90deg, transparent, rgba(240, 165, 26, .62), rgba(184, 59, 12, .34), transparent) !important;
+}
+.chat-input-box {
+  background: linear-gradient(135deg, rgba(255, 252, 245, .9), rgba(253, 246, 232, .68)) !important;
+  border-color: rgba(200, 130, 10, .38) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .94), 0 8px 20px rgba(91, 54, 18, .08) !important;
+}
+.chat-input-box:focus {
+  border-color: var(--gold) !important;
+  box-shadow: 0 0 0 3px var(--gold-glow), 0 10px 24px rgba(91, 54, 18, .12) !important;
+}
+.msg.bot .msg-bubble {
+  background: linear-gradient(145deg, rgba(255, 252, 245, .86), rgba(253, 246, 232, .62)) !important;
+  border-color: rgba(200, 130, 10, .24) !important;
+  box-shadow: 0 10px 24px rgba(91, 54, 18, .1), inset 0 1px 0 rgba(255, 255, 255, .95) !important;
+}
+
+/* Lighter finish for the chat crystal surface */
+.chat-zone {
+  background:
+    radial-gradient(ellipse 46% 38% at 10% 16%, rgba(240, 165, 26, .12), transparent 74%),
+    radial-gradient(ellipse 42% 38% at 92% 84%, rgba(184, 59, 12, .055), transparent 74%),
+    radial-gradient(ellipse 60% 54% at 52% 44%, rgba(255, 255, 255, .98), transparent 78%),
+    linear-gradient(135deg, #fffaf1 0%, #fffdf8 50%, #fbf5e9 100%) !important;
+}
+.chat-zone::after { opacity: .4; }
+.chat-scroll::before { opacity: .58; }
+.chat-scroll::after { opacity: .42; }
+.chat-top-info,
+.chat-input-area {
+  background: linear-gradient(135deg, rgba(255, 255, 255, .9), rgba(255, 252, 245, .76), rgba(253, 246, 232, .7)) !important;
+  box-shadow: 0 8px 22px rgba(91, 54, 18, .06), inset 0 1px 0 rgba(255, 255, 255, .98) !important;
+}
+.chat-input-box {
+  background: rgba(255, 255, 255, .78) !important;
+}
+.msg.bot .msg-bubble {
+  background: rgba(255, 255, 255, .76) !important;
+  box-shadow: 0 8px 18px rgba(91, 54, 18, .07), inset 0 1px 0 rgba(255, 255, 255, .98) !important;
 }
 
 /* ── Chat zone: tighter on mobile ── */

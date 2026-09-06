@@ -12,7 +12,7 @@ from menu_data import MENU, ALL_ITEMS, CATEGORY_LABELS
 
 # ── Intent Patterns ──────────────────────────────────────────────────────────
 INTENTS = {
-    "greet":       r"^(hi|hello|hey|salam|assalam|good (morning|evening|afternoon)|howdy)",
+    "greet":       r"^(hi|hello|hey|salam|assalam|as[- ]?salamu?|good (morning|evening|afternoon)|howdy)",
     "bye":         r"(bye|goodbye|khuda hafiz|allah hafiz|that'?s all|done|nothing else|see you)",
     "thanks":      r"(thank|shukriya|shukria|appreciate|great job|well done|perfect|love it|amazing)",
     "menu":        r"(menu|what.*have|what.*serve|show.*food|browse|see.*menu|all dishes)",
@@ -42,8 +42,24 @@ INTENTS = {
 
 def detect_intents(message: str) -> list[str]:
     """Return list of matched intent keys for the given message."""
-    msg = message.lower()
+    msg = normalize_message(message)
     return [key for key, pattern in INTENTS.items() if re.search(pattern, msg, re.IGNORECASE)]
+
+
+def normalize_message(message: str) -> str:
+    """Normalize casing and common Urdu/English greeting spellings."""
+    text = str(message or "").lower().replace("’", "'")
+    text = re.sub(r"\balakium\b|\balaykum\b|\balaik?um\b|\balaikum\b", "alaikum", text)
+    text = re.sub(r"\bass?alamu?\b", "assalamu", text)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def is_islamic_greeting(message: str) -> bool:
+    text = normalize_message(message)
+    return bool(re.search(
+        r"^(salam|salam\s*(o|u|w)\s*alaikum|assalamu?\s*(o|u|w)?\s*alaikum|as[- ]?salamu?\s*(o|u|w)?\s*alaikum|assalamualaikum)",
+        text, re.I
+    ))
 
 
 def find_menu_items(message: str) -> list[dict]:
@@ -101,7 +117,7 @@ def item_detail_response(item: dict, message: str) -> dict:
     asks_diet = re.search(r"vegetarian|vegan|meatless|no meat|plant.?based|halal", lower, re.I)
     asks_spice = re.search(r"spicy|hot|mirchi|tez|mild|heat level|hotness", lower, re.I)
 
-    if asks_ingredients:
+    if asks_ingredients and not asks_nutrition:
         return {
             "text": (
                 f"**{item['name']}** is prepared as follows:\n\n{item['desc']}\n\n"
@@ -157,11 +173,17 @@ def build_response(message: str, cart: dict | None = None) -> dict:
     intents    = detect_intents(message)
     found_items = find_menu_items(message)
     is_add     = bool(re.search(
-        r"\b(add|order|want|i'?d like|i will have|can i have|give me|bring me|get me|i want|please|ek|do|two|one|three|four|\d+)\b",
+        r"\b(add|order|want|i'?d like|i will have|i'll have|can i have|can you add|put .* in (my )?cart|give me|bring me|get me|i want|ek|do|two|one|three|four|\d+)\b",
         message, re.IGNORECASE
     ))
 
     # ── Greet ──────────────────────────────────────────────────────────────
+    if is_islamic_greeting(message) and not found_items:
+        return {
+            "text": "**Wa Alaikum Assalam!** 🌸\n\nWelcome to **Hanan Signature** ✦\n\nI’m your personal dining assistant. I can help you explore our Pakistani menu, answer questions about ingredients and allergens, recommend dishes, or place your order.\n\nHow may I serve you today?",
+            "replies": ["Chef's Signatures ✨", "What's popular? ⭐", "Show full menu 📋", "Is everything Halal? ✅"]
+        }
+
     if "greet" in intents and not found_items:
         return {
             "text": (
@@ -273,7 +295,8 @@ def build_response(message: str, cart: dict | None = None) -> dict:
         }
 
     # ── Popular ────────────────────────────────────────────────────────────
-    if "popular" in intents:
+    if ("popular" in intents and "vegetarian" not in intents and
+            "gluten_free" not in intents and "spicy" not in intents):
         pops = sorted(
             [i for i in ALL_ITEMS.values() if "popular" in i["tags"]],
             key=lambda x: x["votes"], reverse=True

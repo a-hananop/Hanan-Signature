@@ -8,7 +8,7 @@ const Chat = (() => {
 
   // ── Intent Patterns ───────────────────────────────────────────────────
   const INTENTS = {
-    greet:       /^(hi|hello|hey|salam|assalam|good (morning|evening|afternoon)|howdy)/i,
+    greet:       /^(hi|hello|hey|salam|assalam|as[- ]?salamu?|good (morning|evening|afternoon)|howdy)/i,
     bye:         /(bye|goodbye|khuda hafiz|allah hafiz|that'?s all|done|nothing else|see you)/i,
     thanks:      /(thank|shukriya|shukria|appreciate|great job|well done|perfect|love it|amazing)/i,
     menu:        /(menu|what.*have|what.*serve|show.*food|browse|see.*menu|all dishes|full menu)/i,
@@ -36,9 +36,25 @@ const Chat = (() => {
   };
 
   function detectIntents(msg) {
+    msg = normalizeMessage(msg);
     return Object.entries(INTENTS)
       .filter(function (kv) { return kv[1].test(msg); })
       .map(function (kv) { return kv[0]; });
+  }
+
+  function normalizeMessage(msg) {
+    return String(msg || "")
+      .toLowerCase()
+      .replace(/[’']/g, "'")
+      .replace(/\balakium\b|\balaykum\b|\balaik?um\b|\balaikum\b/g, "alaikum")
+      .replace(/\bass?alamu?\b/g, "assalamu")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function isIslamicGreeting(msg) {
+    var text = normalizeMessage(msg);
+    return /^(salam|salam\s*(o|u|w)\s*alaikum|assalamu?\s*(o|u|w)?\s*alaikum|as[- ]?salamu?\s*(o|u|w)?\s*alaikum|assalamualaikum)/i.test(text);
   }
 
   // ── Fuzzy item matching ───────────────────────────────────────────────
@@ -78,7 +94,7 @@ const Chat = (() => {
     var asksSpice = INTENTS.spicy.test(msg) || /mild|heat level|hotness/i.test(msg);
     var tags = item.tags.map(function (t) { return t.replace(/-/g, " "); }).join(", ");
 
-    if (asksIngredients) return {
+    if (asksIngredients && !asksNutrition) return {
       text: "**" + item.name + "** is prepared as follows:\n\n" + item.desc +
         "\n\n_Allergen information: " + (item.allergens.length ? item.allergens.join(", ") : "none declared") + "._",
       replies: ["How spicy is it?", "How many calories?", "Add " + item.name]
@@ -120,7 +136,7 @@ const Chat = (() => {
   function nlpRespond(msg) {
     var intents    = detectIntents(msg);
     var foundItems = findMenuItems(msg);
-    var isAdd      = /\b(add|order|want|i'?d like|can i have|give me|bring me|get me|i want|please|ek|do|two|one|three|four|2|3|4|5)\b/i.test(msg);
+    var isAdd      = /\b(add|order|want|i'?d like|i will have|i'll have|can i have|can you add|put .* in (my )?cart|give me|bring me|get me|i want|ek|do|two|one|three|four|2|3|4|5)\b/i.test(msg);
     var isRemove   = /\b(remove|delete|cancel|take off|don'?t want|no more|get rid)\b/i.test(msg);
     var msgL       = msg.toLowerCase().trim();
 
@@ -135,6 +151,13 @@ const Chat = (() => {
     }
 
     // ── Greet ──────────────────────────────────────────────────────────
+    if (isIslamicGreeting(msg) && !foundItems.length) {
+      return {
+        text: "**Wa Alaikum Assalam!** 🌸\n\nWelcome to **Hanan Signature** ✦\n\nI’m your personal dining assistant. I can help you explore our Pakistani menu, answer questions about ingredients and allergens, recommend dishes, or place your order.\n\nHow may I serve you today?",
+        replies: ["Chef's Signatures ✨", "What's popular? ⭐", "Show full menu 📋", "Is everything Halal? ✅"]
+      };
+    }
+
     if (intents.includes("greet") && !foundItems.length) {
       var h = new Date().getHours();
       var g = h < 12 ? "Good morning ☀️" : h < 17 ? "Good afternoon 🌤️" : "Good evening 🌙";
@@ -240,7 +263,8 @@ const Chat = (() => {
     }
 
     // ── Popular ────────────────────────────────────────────────────────
-    if (intents.includes("popular")) {
+    if (intents.includes("popular") && !intents.includes("vegetarian") &&
+        !intents.includes("glutenfree") && !intents.includes("spicy")) {
       var pops = Object.values(Menu.ALL_ITEMS)
         .filter(function (i) { return i.tags.includes("popular"); })
         .sort(function (a, b) { return b.votes - a.votes; }).slice(0, 5);

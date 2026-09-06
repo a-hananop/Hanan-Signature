@@ -252,6 +252,78 @@ const App = (() => {
     });
   }
 
+  function bindCustomTableSelect() {
+    var el = document.getElementById("tableSelect");
+    var wrap = el && el.closest(".table-select-wrap");
+    if (!el || !wrap || wrap.dataset.customized) return;
+    wrap.dataset.customized = "1";
+
+    var trigger = document.createElement("button");
+    trigger.type = "button";
+    trigger.className = "table-select-trigger";
+    trigger.setAttribute("aria-haspopup", "listbox");
+    trigger.setAttribute("aria-expanded", "false");
+
+    var menu = document.createElement("div");
+    menu.className = "table-dropdown-menu";
+    menu.setAttribute("role", "listbox");
+    menu.setAttribute("aria-label", "Available tables");
+
+    Array.from(el.options).forEach(function (option, index) {
+      var choice = document.createElement("button");
+      choice.type = "button";
+      choice.className = "table-dropdown-option";
+      choice.dataset.value = option.value;
+      choice.setAttribute("role", "option");
+      choice.innerHTML = "<span class='table-option-mark'>✦</span><span>" + escHtml(option.textContent) + "</span>";
+      choice.style.setProperty("--option-delay", (index * 0.035) + "s");
+      choice.addEventListener("click", function () {
+        selectTable(option.value, true);
+        closeMenu();
+      });
+      menu.appendChild(choice);
+    });
+
+    wrap.appendChild(trigger);
+    wrap.appendChild(menu);
+    el.setAttribute("aria-hidden", "true");
+    el.tabIndex = -1;
+
+    function selectTable(value, announce) {
+      el.value = value;
+      state.tableNumber = value;
+      var selected = el.options[el.selectedIndex];
+      trigger.innerHTML = "<span class='table-trigger-icon'>✦</span><span>" + escHtml(selected ? selected.textContent : "— Select —") + "</span><span class='table-trigger-chevron'>⌄</span>";
+      menu.querySelectorAll(".table-dropdown-option").forEach(function (option) {
+        var active = option.dataset.value === value;
+        option.classList.toggle("selected", active);
+        option.setAttribute("aria-selected", active ? "true" : "false");
+      });
+      if (announce && value) showToast("🪑 Table " + value + " selected", "success");
+    }
+    function openMenu() {
+      menu.classList.add("open");
+      trigger.classList.add("open");
+      trigger.setAttribute("aria-expanded", "true");
+    }
+    function closeMenu() {
+      menu.classList.remove("open");
+      trigger.classList.remove("open");
+      trigger.setAttribute("aria-expanded", "false");
+    }
+    trigger.addEventListener("click", function () {
+      menu.classList.contains("open") ? closeMenu() : openMenu();
+    });
+    document.addEventListener("click", function (event) {
+      if (!wrap.contains(event.target)) closeMenu();
+    });
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") closeMenu();
+    });
+    el.addEventListener("change", function () { selectTable(el.value, true); });
+    selectTable(el.value, false);
+  }
+
   function bindCartClear() {
     var btn = document.getElementById("cartClearBtn");
     if (!btn) return;
@@ -406,6 +478,7 @@ const App = (() => {
     bindMobileTabs();
     bindCartToggle();
     bindTableSelect();
+    bindCustomTableSelect();
     bindCartClear();
     bindTipButtons();
     bindCheckout();
