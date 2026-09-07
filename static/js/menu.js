@@ -246,8 +246,8 @@ const Menu = (() => {
     // apostrophe differs from the menu data as an explicit alias.
     var filename = item.imageFile || DISH_IMAGES[item.id] || item.name + ".jpg";
     if (item.id === "sp2") filename = "Royal Nihari — Chef’s Pride.jpg";
-    // Flask serves this folder from the stable /static URL.
-    return item.image || "/static/images/dishes/" + encodeURI(filename);
+    // Use the Flask/Vercel image route so photos work in both local and serverless builds.
+    return item.image || "/images/dishes/" + encodeURI(filename);
   }
 
   function viewerImageMarkup(item) {

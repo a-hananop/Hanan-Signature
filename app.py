@@ -7,7 +7,7 @@ import random
 import string
 from datetime import datetime
 
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, render_template, request, send_from_directory
 
 from menu_data import ALL_ITEMS, MENU, SERVICE_RATE, TAX_RATE
 from nlp_engine import build_response, generate_order_id
@@ -26,6 +26,12 @@ ORDER_LOG: list[dict] = []
 def index():
     """Serve the main dining interface."""
     return render_template("index.html")
+
+
+@app.route("/images/dishes/<path:filename>")
+def dish_image(filename: str):
+    """Serve dish photos through the app in local and Vercel deployments."""
+    return send_from_directory(app.static_folder + "/images/dishes", filename)
 
 
 # ── Menu API ─────────────────────────────────────────────────────────────────
