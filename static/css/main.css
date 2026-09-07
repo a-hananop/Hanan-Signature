@@ -629,6 +629,149 @@ select:focus {
   }
 }
 
+/* Final override for narrow screens. */
+@media (max-width: 600px) {
+  .header { height: 60px; padding: 0 10px 0 14px; }
+  .header-brand { max-width: calc(100% - 48px); }
+  .brand-name { max-width: 100%; font-size: clamp(1.02rem, 5vw, 1.3rem) !important; letter-spacing: .045em !important; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .brand-sub { display: none !important; }
+  .filter-bar { top: 60px; height: 48px; min-height: 48px; padding: 6px 10px; gap: 7px; overflow-x: auto; overflow-y: hidden; align-items: center; }
+  .filter-label {
+    position: static !important;
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 48px;
+    width: 48px;
+    min-width: 48px;
+    height: 30px;
+    padding: 0 !important;
+    margin: 0 2px 0 0;
+    background: transparent !important;
+    white-space: nowrap;
+    font-size: .56rem;
+    letter-spacing: .12em;
+    z-index: auto;
+  }
+  .chip { flex: 0 0 auto; min-height: 32px; padding: 6px 11px; font-size: .67rem; line-height: 1; }
+  .chat-input-area { padding: 8px 9px calc(9px + env(safe-area-inset-bottom)); }
+  .chat-input-row { gap: 6px; align-items: stretch; }
+  .chat-input-box { min-width: 0; min-height: 44px; height: 44px; max-height: 92px; padding: 10px 12px; font-size: .78rem; line-height: 1.35; border-radius: 15px; overflow-y: auto; }
+  .voice-btn, .send-btn { width: 40px; height: 40px; align-self: center; flex: 0 0 40px; }
+  .chat-hint { margin-top: 5px; padding: 0 3px; font-size: .5rem; line-height: 1.25; white-space: normal; text-align: center; }
+}
+@media (max-width: 380px) {
+  .header { padding-left: 10px; }
+  .brand-name { font-size: 1rem !important; }
+  .filter-bar { padding-left: 8px; padding-right: 8px; }
+  .chip { padding-left: 9px; padding-right: 9px; font-size: .63rem; }
+}
+
+/* Final mobile polish: keep the header, filters, and composer readable. */
+@media (max-width: 600px) {
+  :root {
+    --header-h: 60px;
+    --filter-h: 48px;
+  }
+
+  .header {
+    height: var(--header-h);
+    padding: 0 10px 0 14px;
+    gap: 8px;
+  }
+
+  .header-brand {
+    min-width: 0;
+    max-width: calc(100% - 48px);
+  }
+
+  .brand-name {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: clamp(1.02rem, 5vw, 1.3rem) !important;
+    letter-spacing: .045em !important;
+  }
+
+  .brand-sub { display: none !important; }
+  .header-actions { gap: 0; flex: 0 0 auto; }
+  .h-btn { width: 38px; height: 38px; font-size: .95rem; }
+
+  .filter-bar {
+    top: var(--header-h);
+    height: var(--filter-h);
+    min-height: var(--filter-h);
+    padding: 6px 10px;
+    gap: 7px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    align-items: center;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+  }
+
+  .filter-label {
+    font-size: .56rem;
+    letter-spacing: .16em;
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    padding-right: 2px;
+    background: rgba(255, 252, 245, .94);
+  }
+
+  .chip {
+    flex: 0 0 auto;
+    min-height: 32px;
+    padding: 6px 11px;
+    font-size: .67rem;
+    line-height: 1;
+    scroll-snap-align: start;
+  }
+
+  .chat-input-area {
+    padding: 8px 9px calc(9px + env(safe-area-inset-bottom));
+  }
+
+  .chat-input-row { gap: 6px; align-items: stretch; }
+
+  .chat-input-box {
+    min-width: 0;
+    min-height: 44px;
+    height: 44px;
+    max-height: 92px;
+    padding: 10px 12px;
+    font-size: .78rem;
+    line-height: 1.35;
+    border-radius: 15px;
+    overflow-y: auto;
+  }
+
+  .voice-btn,
+  .send-btn {
+    width: 40px;
+    height: 40px;
+    align-self: center;
+    flex: 0 0 40px;
+  }
+
+  .chat-hint {
+    margin-top: 5px;
+    padding: 0 3px;
+    font-size: .5rem;
+    line-height: 1.25;
+    white-space: normal;
+    text-align: center;
+  }
+}
+
+@media (max-width: 380px) {
+  .header { padding-left: 10px; }
+  .brand-name { font-size: 1rem !important; }
+  .filter-bar { padding-left: 8px; padding-right: 8px; }
+  .chip { padding-left: 9px; padding-right: 9px; font-size: .63rem; }
+}
+
 /* ── Small phone ── */
 @media (max-width: 480px) {
   .hal-badge {
@@ -1081,4 +1224,57 @@ select:focus {
   .cart-panel:not([style*="none"]) {
     animation: panelSlideUp 0.32s var(--ease-spring);
   }
+}
+
+/* Narrow-screen layout overrides */
+@media (max-width: 600px) {
+  .layout {
+    top: calc(60px + 48px) !important;
+    bottom: calc(56px + env(safe-area-inset-bottom, 0px)) !important;
+    overflow: hidden;
+  }
+  .chat-zone,
+  .menu-sidebar,
+  .cart-panel {
+    min-height: 0;
+    overflow: hidden;
+  }
+  .chat-scroll {
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  .header { height: 60px; padding: 0 10px 0 14px; }
+  .header-brand { max-width: calc(100% - 48px); }
+  .brand-name { max-width: 100%; font-size: clamp(1.02rem, 5vw, 1.3rem) !important; letter-spacing: .045em !important; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .brand-sub { display: none !important; }
+  .filter-bar { top: 60px; height: 48px; min-height: 48px; padding: 6px 10px; gap: 7px; overflow-x: auto; overflow-y: hidden; align-items: center; }
+  .filter-label {
+    position: static !important;
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 48px;
+    width: 48px;
+    min-width: 48px;
+    height: 30px;
+    padding: 0 !important;
+    margin: 0 2px 0 0;
+    background: transparent !important;
+    white-space: nowrap;
+    font-size: .56rem;
+    letter-spacing: .12em;
+    z-index: auto;
+  }
+  .chip { flex: 0 0 auto; min-height: 32px; padding: 6px 11px; font-size: .67rem; line-height: 1; }
+  .chat-input-area { position: relative; z-index: 5; padding: 8px 9px calc(9px + env(safe-area-inset-bottom)); }
+  .chat-input-row { gap: 6px; align-items: stretch; }
+  .chat-input-box { min-width: 0; min-height: 44px; height: 44px; max-height: 92px; padding: 10px 12px; font-size: .78rem; line-height: 1.35; border-radius: 15px; overflow-y: auto; }
+  .voice-btn, .send-btn { width: 40px; height: 40px; align-self: center; flex: 0 0 40px; }
+  .chat-hint { margin-top: 5px; padding: 0 3px; font-size: .5rem; line-height: 1.25; white-space: normal; text-align: center; }
+}
+@media (max-width: 380px) {
+  .header { padding-left: 10px; }
+  .brand-name { font-size: 1rem !important; }
+  .filter-bar { padding-left: 8px; padding-right: 8px; }
+  .chip { padding-left: 9px; padding-right: 9px; font-size: .63rem; }
 }
