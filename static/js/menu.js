@@ -227,12 +227,27 @@ const Menu = (() => {
   // adding an `image` URL to an item). Missing photos automatically fall back
   // to the dish emoji, so the menu remains usable while the photo library is
   // being prepared.
+  var DISH_IMAGES = {
+    sp1: "Hanan Dum Biryani.jpg", sp2: "Royal Nihari — Chef’s Pride.jpg", sp3: "Signature Cast-Iron Karahi.jpg",
+    s1: "Chicken Tikka.jpg", s2: "Seekh Kebab.jpg", s3: "Crispy Samosa (3 pcs).jpg", s4: "Papri Chaat.jpg",
+    s5: "Reshmi Kebab.jpg", s6: "Aloo Tikki (4 pcs).jpg", s7: "Dahi Bhalle.jpg", s8: "Bun Kebab.jpg",
+    m1: "Chicken Karahi.jpg", m2: "Mutton Dum Biryani.jpg", m3: "Dal Makhani.jpg", m4: "Palak Gosht.jpg",
+    m5: "Chicken Handi.jpg", m6: "Haleem.jpg", m7: "Aloo Gosht.jpg", m8: "Daal Tadka.jpg",
+    m9: "Chicken Biryani.jpg", m10: "Paya (Trotters).jpg", m11: "Lahori Chargha.jpg", m12: "Saag Paneer.jpg",
+    m13: "Keema Naan.jpg", m14: "Mutton Roghan Josh.jpg", d1: "Gulab Jamun (3 pcs).jpg", d2: "Kheer.jpg",
+    d3: "Shahi Tukray.jpg", d4: "Gajar Halwa.jpg", d5: "Rasmalai.jpg", d6: "Kulfi (2 pcs).jpg",
+    d7: "Zarda (Sweet Rice).jpg", dr1: "Mango Lassi.jpg", dr2: "Kashmiri Chai (Pink Tea).jpg",
+    dr3: "Sweet Lassi.jpg", dr4: "Rooh Afza Sharbat.jpg", dr5: "Doodh Patti Chai.jpg",
+    dr6: "Fresh Lime Soda.jpg", dr7: "Jaljeera.jpg", dr8: "Sugarcane Juice.jpg"
+  };
+
   function imageSrc(item) {
     // The uploaded files use the dish name. Keep the one filename whose
     // apostrophe differs from the menu data as an explicit alias.
-    var filename = item.imageFile || item.name + ".jpg";
+    var filename = item.imageFile || DISH_IMAGES[item.id] || item.name + ".jpg";
     if (item.id === "sp2") filename = "Royal Nihari — Chef’s Pride.jpg";
-    return item.image || "/static/images/dishes/" + encodeURIComponent(filename);
+    // Keep the path relative so it works in Flask, Live Server, and mobile previews.
+    return item.image || "static/images/dishes/" + encodeURIComponent(filename);
   }
 
   function viewerImageMarkup(item) {

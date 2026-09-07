@@ -4707,3 +4707,21 @@ select {
 @media (prefers-reduced-motion: reduce) {
   .detail-icon svg, .dish-viewer::before, .dish-viewer::after, .dish-viewer-orbit, .dish-viewer-glow, .dish-viewer-stage, .dish-viewer-image, .dish-viewer-fallback .detail-icon, .modal-meta-grid .meta-pill, .modal-tags .tag { animation:none !important; }
 }
+
+/* Keep real dish photos visible in compact mobile cards and the viewer. */
+@media (max-width: 600px) {
+  .menu-card-top { align-items: center; }
+  .menu-card-image {
+    display: block !important;
+    visibility: visible !important;
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px;
+    flex: 0 0 48px;
+    object-fit: cover;
+  }
+  .dish-viewer-image {
+    display: block;
+    visibility: visible;
+  }
+}
