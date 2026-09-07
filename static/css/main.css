@@ -655,7 +655,7 @@ select:focus {
   .chip { flex: 0 0 auto; min-height: 32px; padding: 6px 11px; font-size: .67rem; line-height: 1; }
   .chat-input-area { padding: 8px 9px calc(9px + env(safe-area-inset-bottom)); }
   .chat-input-row { gap: 6px; align-items: stretch; }
-  .chat-input-box { min-width: 0; min-height: 44px; height: 44px; max-height: 92px; padding: 10px 12px; font-size: .78rem; line-height: 1.35; border-radius: 15px; overflow-y: auto; }
+  .chat-input-box { min-width: 0; min-height: 54px; height: 54px; max-height: 104px; padding: 9px 12px; font-size: .78rem; line-height: 1.4; border-radius: 15px; overflow-y: auto; }
   .voice-btn, .send-btn { width: 40px; height: 40px; align-self: center; flex: 0 0 40px; }
   .chat-hint { margin-top: 5px; padding: 0 3px; font-size: .5rem; line-height: 1.25; white-space: normal; text-align: center; }
 }
@@ -1226,6 +1226,27 @@ select:focus {
   }
 }
 
+/* Shared brand lockup — visible on desktop, tablet, and mobile. */
+.header-brand {
+  position: relative;
+  padding-left: 40px;
+}
+.header-brand .brand-sub {
+  display: none !important;
+}
+.header-brand::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  transform: translateY(-50%);
+  background: url("/static/images/favicon.svg") center / cover no-repeat;
+  box-shadow: 0 0 0 1px rgba(240, 165, 26, .45), 0 4px 12px rgba(0, 0, 0, .32);
+}
+
 /* Narrow-screen layout overrides */
 @media (max-width: 600px) {
   .layout {
@@ -1245,7 +1266,26 @@ select:focus {
     overflow-x: hidden;
   }
   .header { height: 60px; padding: 0 10px 0 14px; }
-  .header-brand { max-width: calc(100% - 48px); }
+  .header-brand {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    max-width: calc(100% - 48px);
+    padding-left: 0;
+  }
+  .header-brand::before {
+    content: "";
+    position: static;
+    display: block;
+    width: 28px;
+    height: 28px;
+    flex: 0 0 28px;
+    border-radius: 9px;
+    transform: none;
+    background: url("/static/images/favicon.svg") center / cover no-repeat;
+    box-shadow: 0 0 0 1px rgba(240, 165, 26, .45), 0 4px 12px rgba(0, 0, 0, .32);
+  }
   .brand-name { max-width: 100%; font-size: clamp(1.02rem, 5vw, 1.3rem) !important; letter-spacing: .045em !important; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .brand-sub { display: none !important; }
   .filter-bar { top: 60px; height: 48px; min-height: 48px; padding: 6px 10px; gap: 7px; overflow-x: auto; overflow-y: hidden; align-items: center; }
@@ -1268,7 +1308,7 @@ select:focus {
   .chip { flex: 0 0 auto; min-height: 32px; padding: 6px 11px; font-size: .67rem; line-height: 1; }
   .chat-input-area { position: relative; z-index: 5; padding: 8px 9px calc(9px + env(safe-area-inset-bottom)); }
   .chat-input-row { gap: 6px; align-items: stretch; }
-  .chat-input-box { min-width: 0; min-height: 44px; height: 44px; max-height: 92px; padding: 10px 12px; font-size: .78rem; line-height: 1.35; border-radius: 15px; overflow-y: auto; }
+  .chat-input-box { min-width: 0; min-height: 54px; height: 54px; max-height: 104px; padding: 9px 12px; font-size: .78rem; line-height: 1.4; border-radius: 15px; overflow-y: auto; }
   .voice-btn, .send-btn { width: 40px; height: 40px; align-self: center; flex: 0 0 40px; }
   .chat-hint { margin-top: 5px; padding: 0 3px; font-size: .5rem; line-height: 1.25; white-space: normal; text-align: center; }
 }
