@@ -5,6 +5,8 @@ Authentic Pakistani Fine Dining — Ordering & Chat System
 
 import random
 import string
+import os
+import unicodedata
 from datetime import datetime
 
 from flask import Flask, jsonify, render_template, request, send_from_directory
@@ -32,6 +34,34 @@ def index():
 def dish_image(filename: str):
     """Serve dish photos through the app in local and Vercel deployments."""
     return send_from_directory(app.static_folder + "/images/dishes", filename)
+
+
+def _normalized_file_stem(value: str) -> str:
+    value = unicodedata.normalize("NFKC", value).casefold()
+    value = value.replace("’", "'").replace("—", "-").replace("–", "-")
+    return "".join(value.split())
+
+
+@app.route("/api/dish-image/<item_id>")
+def dish_image_by_id(item_id: str):
+    """Resolve a dish photo by menu ID for deployment-safe image loading."""
+    item = ALL_ITEMS.get(item_id) if isinstance(ALL_ITEMS, dict) else next(
+        (dish for dish in ALL_ITEMS if dish.get("id") == item_id), None
+    )
+    if not item:
+        return "", 404
+
+    dish_dir = os.path.join(app.static_folder, "images", "dishes")
+    target = _normalized_file_stem(item["name"])
+    filename = next(
+        (
+            name for name in os.listdir(dish_dir)
+            if name.lower().endswith((".jpg", ".jpeg", ".png", ".webp"))
+            and _normalized_file_stem(os.path.splitext(name)[0]) == target
+        ),
+        None,
+    )
+    return send_from_directory(dish_dir, filename) if filename else ("", 404)
 
 
 # ── Menu API ─────────────────────────────────────────────────────────────────
