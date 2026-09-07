@@ -3296,7 +3296,7 @@ select {
   display: block;
   width: 22px;
   height: 22px;
-  background: currentColor;
+  background: linear-gradient(145deg, #fff1ad 0%, #f0b93f 34%, #c8820a 72%, #8b4d04 100%);
   -webkit-mask: var(--cat-icon);
   mask: var(--cat-icon);
   -webkit-mask-size: contain;
@@ -3307,15 +3307,30 @@ select {
   mask-position: center;
   animation: categoryIconFloat 3.4s ease-in-out infinite;
 }
-.sidebar-cats #catNav .cat-btn:nth-child(1) .cat-icon { --cat-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M4 9h16l-1 3H5L4 9Zm2 4h12v6H6v-6ZM3 21h18v1H3V21Zm3-9h12v1H6v-1Zm1-7h10l2 3H5l2-3Z'/%3E%3C/svg%3E"); }
-.sidebar-cats #catNav .cat-btn:nth-child(2) .cat-icon { --cat-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='m12 2 1.8 6.2L20 6l-4.2 5.2L22 14l-6.5.3L17 21l-5-4-5 4 1.5-6.7L2 14l6.2-2.8L4 6l6.2 2.2L12 2Z'/%3E%3C/svg%3E"); }
-.sidebar-cats #catNav .cat-btn:nth-child(3) .cat-icon { --cat-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M5 10h14v9H5zM3 19h18v2H3V19Zm2-9 5-6h4l5 6H5Zm3 3h2v3H8v-3Zm6 0h2v3h-2v-3Z'/%3E%3C/svg%3E"); }
-.sidebar-cats #catNav .cat-btn:nth-child(4) .cat-icon { --cat-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M4 9h16v2H4V9Zm2 3h12v8H6v-8Zm-2 8h16v2H4v-2Zm3-13 5-5 5 5H7Zm3 4h4v7h-4v-7Z'/%3E%3C/svg%3E"); }
-.sidebar-cats #catNav .cat-btn:nth-child(5) .cat-icon { --cat-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M4 17h16v2H4v-2Zm2-2h12l-2-9H8l-2 9Zm3-12h6v2H9V3Zm1 7h4v3h-4v-3Z'/%3E%3C/svg%3E"); }
-.sidebar-cats #catNav .cat-btn:nth-child(6) .cat-icon { --cat-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M8 3h8v2h-1v5.5l3.5 7A2.5 2.5 0 0 1 16.3 21H7.7a2.5 2.5 0 0 1-2.2-3.5l3.5-7V5H8V3Zm3 2v6l-3.3 6.5c-.2.4.1.8.5.8h8.6c.4 0 .7-.4.5-.8L14 11V5h-3Z'/%3E%3C/svg%3E"); }
+.sidebar-cats #catNav .cat-icon::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 7px;
+  left: 6px;
+  top: 5px;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(ellipse, rgba(255, 246, 194, .72), transparent 72%);
+  opacity: .55;
+  mix-blend-mode: screen;
+  animation: categoryIconShine 4s ease-in-out infinite;
+}
+  .sidebar-cats #catNav .cat-btn:nth-child(1) .cat-icon { --cat-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M3 15h18v2H3v-2Zm2 3h14v2H5v-2Zm1-5c.4-5.4 2.2-8.4 6-8.4s5.6 3 6 8.4H6Zm4-9h4v2h-4V4Z'/%3E%3Cpath fill='white' d='M8 12.2c1.2-3.8 2.4-5.1 4-5.1 1.8 0 3.1 1.4 4 5.1H8Z'/%3E%3C/svg%3E"); }
+  .sidebar-cats #catNav .cat-btn:nth-child(2) .cat-icon { --cat-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M6 11h12v8H6v-8Zm-2 8h16v2H4v-2Zm2-8c-1.4 0-2.5-1-2.5-2.3S4.6 6.4 6 6.4c.5 0 1 .1 1.3.4C7.5 4.8 8.8 3.5 10.6 3.5c.8 0 1.5.3 2 .8.6-.8 1.4-1.3 2.4-1.3 1.9 0 3.2 1.5 3.2 3.4 1.1 0 2 .8 2 1.9S19.3 10 18 10H6v1Z'/%3E%3Cpath fill='white' d='M9 13h6v1H9v-1Z'/%3E%3C/svg%3E"); }
+  .sidebar-cats #catNav .cat-btn:nth-child(3) .cat-icon { --cat-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='m12 4 7 8-7 8-7-8 7-8Zm0 3-4.3 5L12 17l4.3-5L12 7Z'/%3E%3Cpath fill='black' d='M5 18h14v2H5v-2Z'/%3E%3C/svg%3E"); }
+  .sidebar-cats #catNav .cat-btn:nth-child(4) .cat-icon { --cat-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M5 9h14l-1 9H6L5 9Zm3-3h8l2 3H6l2-3Zm-1 13h10v2H7v-2Z'/%3E%3Cpath fill='white' d='M8 12h8v2H8v-2Z'/%3E%3C/svg%3E"); }
+  .sidebar-cats #catNav .cat-btn:nth-child(5) .cat-icon { --cat-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M4 18h16v2H4v-2Zm3-2 1-8h8l1 8H7Zm2-8V6h6v2H9Zm1-5h4v3h-4V3Z'/%3E%3Cpath fill='white' d='M9 12h6v2H9v-2Z'/%3E%3C/svg%3E"); }
+  .sidebar-cats #catNav .cat-btn:nth-child(6) .cat-icon { --cat-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M6 4h12v2h-1.1l-.9 5.4c-.3 1.8-1.5 3.1-3 3.5V19h4v2H7v-2h4v-4.1c-1.5-.4-2.7-1.7-3-3.5L7.1 6H6V4Zm3.1 2 .8 5.1c.2 1.1 1 1.9 2.1 1.9s1.9-.8 2.1-1.9l.8-5.1H9.1Z'/%3E%3Cpath fill='white' d='M8.3 9h7.4l-.3 1.8H8.6L8.3 9Z'/%3E%3C/svg%3E"); }
 .sidebar-cats #catNav .cat-btn:hover .cat-icon,
 .sidebar-cats #catNav .cat-btn.active .cat-icon { color: var(--gold-hi); }
 .sidebar-cats #catNav .cat-btn:hover .cat-icon::before { animation: categoryIconPop .55s cubic-bezier(.2,.8,.2,1); }
+.sidebar-cats #catNav .cat-btn:hover .cat-icon::after { opacity: .9; transform: translateX(2px) scale(1.12); }
 .sidebar-cats #catNav .cat-btn.active .cat-icon::before { animation: categoryIconActive 2.2s ease-in-out infinite; }
 .sidebar-cats #catNav .cat-btn:nth-child(2) .cat-icon::before { animation-delay: .15s; }
 .sidebar-cats #catNav .cat-btn:nth-child(3) .cat-icon::before { animation-delay: .3s; }
@@ -3325,8 +3340,10 @@ select {
 @keyframes categoryIconFloat { 0%,100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-2px) rotate(-3deg); } }
 @keyframes categoryIconPop { 0% { transform: scale(1); } 45% { transform: scale(1.25) rotate(8deg); } 100% { transform: scale(1); } }
 @keyframes categoryIconActive { 0%,100% { transform: scale(1); filter: drop-shadow(0 0 0 transparent); } 50% { transform: scale(1.1); filter: drop-shadow(0 0 7px rgba(255, 212, 111, .75)); } }
+@keyframes categoryIconShine { 0%,100% { transform: translateX(-2px); opacity: .35; } 50% { transform: translateX(2px); opacity: .72; } }
 @media (prefers-reduced-motion: reduce) {
-  .sidebar-cats #catNav .cat-icon::before { animation: none !important; }
+  .sidebar-cats #catNav .cat-icon::before,
+  .sidebar-cats #catNav .cat-icon::after { animation: none !important; }
 }
 
 @media (max-width: 480px) {
